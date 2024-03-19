@@ -5,16 +5,39 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema
 public class Assets {
+	@JsonProperty("id")
+    @Schema(description = "id")
     private int id;
+    
+    @JsonProperty("asset_number")
+    @Schema(description = "The asset number")
     private String assetNumber;
+    
+    @JsonProperty("asset_name")
+    @Schema(description = "The asset name")
     private String assetName;
+    
+    @JsonProperty("unit_of_use")
+    @Schema(description = "The unit of use")
     private String unitOfUse;
+    
+    @JsonProperty("user")
+    @Schema(description = "The user")
     private String user;
+    
+    @JsonProperty("creation_date")
+    @Schema(description = "The creation date")
     private LocalDate creationDate;
+    
+    @JsonProperty("value")
+    @Schema(description = "The value")
     private double value;
 
     public Assets() {

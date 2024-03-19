@@ -1,4 +1,4 @@
-### 使用說明
+﻿### 使用說明
 
 1. JDK version = 11;
 
@@ -75,6 +75,6 @@
                         "assetNumber" : "A050"
                   }
 
-4. 打開http://localhost:8091/practice5/swagger-ui/index.html
+4. 打開 http://localhost:8091/practice5/swagger-ui/index.html
 
       以查看api狀態

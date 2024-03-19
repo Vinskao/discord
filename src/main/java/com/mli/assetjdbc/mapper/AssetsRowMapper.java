@@ -5,9 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import java.sql.ResultSet;
 import com.mli.assetjdbc.model.Assets;
 
 public class AssetsRowMapper implements RowMapper<Assets> {

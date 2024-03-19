@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 import com.mli.assetjdbc.model.Assets;
 import com.mli.assetjdbc.service.AssetsService;
 
 import dto.AssetRequestDTO;
+import io.swagger.v3.oas.annotations.Operation;
 
+/**
+ * 控制器類，用於處理有關資產的端點。
+ */
 @RestController
 @RequestMapping("/assets")
 public class AssetsController {
@@ -31,11 +31,12 @@ public class AssetsController {
 
     @Autowired
     private AssetsService assetsService;
+
     /**
-      * 從資料庫中擷取所有資產。
-      *
-      * @return 如果找到資產則回傳包含資產清單的 ResponseEntity，如果找不到則回傳 404 Not Found 狀態。
-      */
+     * 從資料庫中擷取所有資產。
+     *
+     * @return 如果找到資產則回傳包含資產清單的 ResponseEntity，如果找不到則回傳 404 Not Found 狀態。
+     */
     @Operation(summary = "從資料庫中擷取所有資產")
     @GetMapping("/select-all")
     public ResponseEntity<?> getAllAssets(){
@@ -48,20 +49,16 @@ public class AssetsController {
     }
 
     /**
-      * 根據資產編號從資料庫中提取資產。
-      *
-      * @param assetNumber 資產編號
-      * @return 如果找到資產則傳回包含資產資訊的 ResponseEntity，如果找不到則傳回 404 Not Found 狀態。
-      */
+     * 根據資產編號從資料庫中提取資產。
+     *
+     * @param requestDTO 資產請求資料。
+     * @return 如果找到資產則傳回包含資產資訊的 ResponseEntity，如果找不到則傳回 404 Not Found 狀態。
+     */
     @Operation(summary = "根據資產編號從資料庫中擷取資產")
-    @ApiResponse(responseCode = "200", description = "成功擷取資產",
-	    content = { @Content(mediaType = "application/json",
-	    schema = @Schema(implementation = AssetRequestDTO.class)) })
-	@ApiResponse(responseCode = "404", description = "找不到資產")
     @PostMapping("/select-by-asset-number")
-    public ResponseEntity<?> getAssetByAssetNumber(@RequestBody @Schema(description = "資產請求資料") AssetRequestDTO requestDTO) {
+    public ResponseEntity<?> getAssetByAssetNumber(AssetRequestDTO requestDTO) {
         String assetNumber = requestDTO.getAssetNumber();
-    	logger.info("assetNumber = {}", assetNumber);
+        logger.info("資產編號：{}", assetNumber);
         Assets asset = assetsService.getAssetByAssetNumber(assetNumber);
         if (asset == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,18 +67,30 @@ public class AssetsController {
         }
     }
 
-    @Operation(summary = "新增資產")
+    /**
+     * 新增一筆資產到資料庫。
+     *
+     * @param asset 要新增的資產。
+     * @return 如果成功新增資產則回傳包含成功訊息的 ResponseEntity，如果資產為空則回傳 404 Not Found 狀態。
+     */
+    @Operation(summary = "新增一筆資產")
     @PostMapping("/add")
     public ResponseEntity<String> addAsset(@RequestBody Assets asset) {
-    	logger.info("controller, asset = {}", asset);
+        logger.info("新增的資產：{}", asset);
         assetsService.addAsset(asset);
         if (asset == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-        	return new ResponseEntity<>("Asset added successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>("資產新增成功", HttpStatus.CREATED);
         }
     }
 
+    /**
+     * 更新資產。
+     *
+     * @param asset 要更新的資產。
+     * @return 如果成功更新資產則回傳包含成功訊息的 ResponseEntity，如果資產為空則回傳 400 Bad Request 狀態。
+     */
     @Operation(summary = "更新資產")
     @PutMapping("/update")
     public ResponseEntity<String> updateAsset(@RequestBody Assets asset) {
@@ -93,6 +102,12 @@ public class AssetsController {
         return new ResponseEntity<>("Asset updated successfully", HttpStatus.OK);
     }
 
+    /**
+     * 刪除資產。
+     *
+     * @param requestDTO 資產請求資料。
+     * @return 如果成功刪除資產則回傳包含成功訊息的 ResponseEntity，如果資產編號為空則回傳 400 Bad Request 狀態。
+     */
     @Operation(summary = "刪除資產")
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAsset(@RequestBody(required = false) AssetRequestDTO requestDTO) {
