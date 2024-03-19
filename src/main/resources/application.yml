@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: assetjdbc
+  datasource:
+    url: jdbc:sqlite:D:\\Users\\D3031104\\Desktop\\asset-jbdc\\src\\main\\resources\\mli-asset-management.db
+    driver-class-name: org.sqlite.JDBC
+  devtools:
+    restart:
+      enabled: true
+
+springdoc:
+  default-flat-param-object: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    persistAuthorization: true
+    
+server:
+  port: 8091
+  servlet:
+    context-path: /practice5
+
+
+
