@@ -2,6 +2,7 @@
 
 DROP TABLE assets;
 DROP TABLE users;
+DROP TABLE units;
 CREATE TABLE assets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     asset_number TEXT NOT NULL,
@@ -40,27 +41,47 @@ CREATE TABLE users (
     name TEXT NOT NULL, 
     hire_date DATE NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT 1,
+    resignation_date DATE,
     password TEXT NOT NULL
 );
 
-INSERT INTO users (name, hire_date, is_active, password) VALUES 
-('John', '2020-01-01', 1, 'password1'),
-('Alice', '2020-02-01', 1, 'password2'),
-('Bob', '2020-03-01', 1, 'password3'),
-('Emily', '2020-04-01', 1, 'password4'),
-('Michael', '2020-05-01', 1, 'password5'),
-('Sarah', '2020-06-01', 1, 'password6'),
-('David', '2020-07-01', 1, 'password7'),
-('Karen', '2020-08-01', 1, 'password8'),
-('Jessica', '2020-09-01', 1, 'password9'),
-('James', '2020-10-01', 1, 'password10'),
-('Emma', '2020-11-01', 1, 'password11'),
-('Andrew', '2020-12-01', 1, 'password12'),
-('Olivia', '2021-01-01', 1, 'password13'),
-('Daniel', '2021-02-01', 1, 'password14'),
-('Sophia', '2021-03-01', 1, 'password15'),
-('Ethan', '2021-04-01', 1, 'password16'),
-('Isabella', '2021-05-01', 1, 'password17'),
-('Mia', '2021-06-01', 1, 'password18'),
-('Noah', '2021-07-01', 1, 'password19'),
-('Ava', '2021-08-01', 1, 'password20');
+INSERT INTO users (name, hire_date, is_active, resignation_date, password)
+VALUES 
+('John', '2020-01-01', 1, NULL, 'password1'),
+('Alice', '2020-02-01', 1, NULL, 'password2'),
+('Bob', '2020-03-01', 1, NULL, 'password3'),
+('Emily', '2020-04-01', 1, NULL, 'password4'),
+('Michael', '2020-05-01', 1, NULL, 'password5'),
+('Sarah', '2020-06-01', 1, NULL, 'password6'),
+('David', '2020-07-01', 1, NULL, 'password7'),
+('Karen', '2020-08-01', 1, NULL, 'password8'),
+('Jessica', '2020-09-01', 1, NULL, 'password9'),
+('James', '2020-10-01', 1, NULL, 'password10'),
+('Emma', '2020-11-01', 1, NULL, 'password11'),
+('Andrew', '2020-12-01', 1, NULL, 'password12'),
+('Olivia', '2021-01-01', 1, NULL, 'password13'),
+('Daniel', '2021-02-01', 1, NULL, 'password14'),
+('Sophia', '2021-03-01', 1, NULL, 'password15'),
+('Ethan', '2021-04-01', 1, NULL, 'password16'),
+('Isabella', '2021-05-01', 1, NULL, 'password17'),
+('Mia', '2021-06-01', 1, NULL, 'password18'),
+('Noah', '2021-07-01', 1, NULL, 'password19'),
+('Ava', '2021-08-01', 1, NULL, 'password20');
+
+CREATE TABLE units (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    creation_date DATE NOT NULL,
+    closed_date DATE
+);
+
+INSERT INTO units (name, creation_date, closed_date)
+VALUES
+('IT Department', '2008-08-01', null),
+('Administration', '2008-08-01', null),
+('Office Management', '2008-08-01', null),
+('Training Department', '2008-08-01', null),
+('Customer Service', '2009-04-01', null),
+('Human Resources', '2007-08-01', null),
+('Sales Department', '2010-01-01', null),
+('Cafeteria', '2008-08-01', null);

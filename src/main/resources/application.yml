@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.sqlite.JDBC
   devtools:
     restart:
-      enabled: false
+      enabled: true
 
 springdoc:
   api-docs:

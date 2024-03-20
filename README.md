@@ -7,7 +7,7 @@
       以啟動 Spring Boot
 
 3. (optional)使用 postman 進行以下測試
-      - 方法： 使用 GET 方法。
+      - 方法： 使用 POST 方法。
 
             網址： http://localhost:8091/practice5/assets/select-all
 
