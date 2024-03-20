@@ -1,0 +1,24 @@
+2024-03-20 12:49:30.802 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - Starting ApiSpringBoot2Application using Java 11.0.22 on 90C30OAD3031104 with PID 6840 (D:\Users\D3031104\Desktop\asset-jbdc\target\classes started by D3031104 in D:\Users\D3031104\Desktop\asset-jbdc)
+2024-03-20 12:49:30.804 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - No active profile set, falling back to 1 default profile: "default"
+2024-03-20 12:49:30.834 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-03-20 12:49:30.834 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-03-20 12:49:31.562 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8091 (http)
+2024-03-20 12:49:31.568 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8091"]
+2024-03-20 12:49:31.569 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-03-20 12:49:31.569 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.76]
+2024-03-20 12:49:31.612 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Initializing Spring embedded WebApplicationContext
+2024-03-20 12:49:31.613 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 778 ms
+2024-03-20 12:49:32.007 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-03-20 12:49:32.016 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8091"]
+2024-03-20 12:49:32.032 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8091 (http) with context path '/practice5'
+2024-03-20 12:49:32.041 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - Started ApiSpringBoot2Application in 1.469 seconds (JVM running for 1.793)
+2024-03-20 12:49:33.058 [http-nio-8091-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-03-20 12:49:33.059 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-03-20 12:49:33.059 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2024-03-20 12:49:33.328 [http-nio-8091-exec-4] INFO  org.springdoc.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 145 ms
+2024-03-20 12:49:42.855 [http-nio-8091-exec-9] INFO  com.mli.assetjdbc.controller.AssetsController - controller, requestDTO = AssetRequestDTO [assetNumber=string]
+2024-03-20 12:49:42.867 [http-nio-8091-exec-9] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-03-20 12:49:43.028 [http-nio-8091-exec-9] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-03-20 12:49:49.441 [http-nio-8091-exec-10] INFO  com.mli.assetjdbc.controller.AssetsController - controller, requestDTO = AssetRequestDTO [assetNumber=A020]
+2024-03-20 12:49:49.442 [http-nio-8091-exec-10] INFO  com.mli.assetjdbc.service.AssetsService - service, assetNumber = A020
+2024-03-20 12:49:49.443 [http-nio-8091-exec-10] INFO  com.mli.assetjdbc.dao.AssetsDaoJdbc - dao, assetNumber = A020

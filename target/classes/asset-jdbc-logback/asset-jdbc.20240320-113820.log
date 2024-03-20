@@ -1,0 +1,47 @@
+2024-03-20 11:38:20.640 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - Starting ApiSpringBoot2Application using Java 11.0.22 on 90C30OAD3031104 with PID 14480 (D:\Users\D3031104\Desktop\asset-jbdc\target\classes started by D3031104 in D:\Users\D3031104\Desktop\asset-jbdc)
+2024-03-20 11:38:20.640 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - No active profile set, falling back to 1 default profile: "default"
+2024-03-20 11:38:20.746 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8091 (http)
+2024-03-20 11:38:20.746 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:38:20.747 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-03-20 11:38:20.747 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.76]
+2024-03-20 11:38:20.753 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Initializing Spring embedded WebApplicationContext
+2024-03-20 11:38:20.754 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 113 ms
+2024-03-20 11:38:20.819 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-03-20 11:38:20.823 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:38:20.825 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8091 (http) with context path '/practice5'
+2024-03-20 11:38:20.827 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - Started ApiSpringBoot2Application in 0.203 seconds (JVM running for 9.617)
+2024-03-20 11:38:20.827 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-03-20 11:38:23.458 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (1 addition, 0 deletions, 1 modification)
+2024-03-20 11:38:23.463 [http-nio-8091-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-03-20 11:38:23.463 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-03-20 11:38:23.464 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2024-03-20 11:38:23.479 [Thread-19] INFO  org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:38:23.479 [Thread-19] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2024-03-20 11:38:23.480 [Thread-19] INFO  org.apache.catalina.core.StandardWrapper - Waiting for [1] instance(s) to be deallocated for Servlet [dispatcherServlet]
+2024-03-20 11:38:23.485 [http-nio-8091-exec-1] INFO  com.mli.assetjdbc.controller.AssetsController - ¸ê²£½s¸¹¡GA033
+2024-03-20 11:38:23.495 [http-nio-8091-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-03-20 11:38:23.870 [http-nio-8091-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-03-20 11:38:23.983 [Thread-19] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2024-03-20 11:38:23.985 [Thread-19] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [practice5] appears to have started a thread named [HikariPool-1 housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@11.0.22/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@11.0.22/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+ java.base@11.0.22/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+ java.base@11.0.22/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@11.0.22/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@11.0.22/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+ java.base@11.0.22/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+ java.base@11.0.22/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+ java.base@11.0.22/java.lang.Thread.run(Thread.java:829)
+2024-03-20 11:38:23.985 [Thread-19] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [practice5] appears to have started a thread named [HikariPool-1 connection adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@11.0.22/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@11.0.22/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+ java.base@11.0.22/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+ java.base@11.0.22/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+ java.base@11.0.22/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+ java.base@11.0.22/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+ java.base@11.0.22/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+ java.base@11.0.22/java.lang.Thread.run(Thread.java:829)
+2024-03-20 11:38:23.986 [Thread-19] INFO  org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:38:23.987 [Thread-19] INFO  org.apache.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:38:23.988 [Thread-19] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-03-20 11:38:23.990 [Thread-19] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: assetjdbc
+  datasource:
+    url: jdbc:sqlite::resources:mli-asset-management.db
+    driver-class-name: org.sqlite.JDBC
+
+springdoc:
+  default-flat-param-object: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    persistAuthorization: true
+
+
+
+

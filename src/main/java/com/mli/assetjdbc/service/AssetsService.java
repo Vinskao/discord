@@ -3,6 +3,7 @@ package com.mli.assetjdbc.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.mli.assetjdbc.dao.AssetsDaoJdbc;
@@ -22,7 +23,11 @@ public class AssetsService {
     }
 
     public Assets getAssetByAssetNumber(String assetNumber) {
-        return assetsDaoJdbc.select(assetNumber);
+        try {
+            return assetsDaoJdbc.select(assetNumber);
+        } catch (EmptyResultDataAccessException e) {
+            return null; 
+        }
     }
 
     public void addAsset(Assets asset) {

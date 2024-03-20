@@ -1,0 +1,31 @@
+2024-03-20 11:44:57.112 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - Starting ApiSpringBoot2Application using Java 11.0.22 on 90C30OAD3031104 with PID 7112 (D:\Users\D3031104\Desktop\asset-jbdc\target\classes started by D3031104 in D:\Users\D3031104\Desktop\asset-jbdc)
+2024-03-20 11:44:57.114 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - No active profile set, falling back to 1 default profile: "default"
+2024-03-20 11:44:57.142 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-03-20 11:44:57.142 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-03-20 11:44:57.853 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8091 (http)
+2024-03-20 11:44:57.859 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:44:57.859 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-03-20 11:44:57.860 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.76]
+2024-03-20 11:44:57.902 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Initializing Spring embedded WebApplicationContext
+2024-03-20 11:44:57.902 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 760 ms
+2024-03-20 11:44:58.310 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-03-20 11:44:58.317 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8091"]
+2024-03-20 11:44:58.328 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8091 (http) with context path '/practice5'
+2024-03-20 11:44:58.339 [restartedMain] INFO  com.mli.assetjdbc.ApiSpringBoot2Application - Started ApiSpringBoot2Application in 1.46 seconds (JVM running for 1.803)
+2024-03-20 11:45:05.379 [http-nio-8091-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/practice5] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-03-20 11:45:05.380 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-03-20 11:45:05.381 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-03-20 11:45:05.399 [http-nio-8091-exec-1] INFO  com.mli.assetjdbc.controller.AssetsController - 資產編號：null
+2024-03-20 11:45:05.417 [http-nio-8091-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-03-20 11:45:05.573 [http-nio-8091-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-03-20 11:45:05.583 [http-nio-8091-exec-1] INFO  com.mli.assetjdbc.controller.AssetsController - 資產：null
+2024-03-20 11:45:11.020 [http-nio-8091-exec-4] INFO  com.mli.assetjdbc.controller.AssetsController - 資產編號：null
+2024-03-20 11:45:11.021 [http-nio-8091-exec-4] INFO  com.mli.assetjdbc.controller.AssetsController - 資產：null
+2024-03-20 11:45:11.881 [http-nio-8091-exec-5] INFO  com.mli.assetjdbc.controller.AssetsController - 資產編號：null
+2024-03-20 11:45:11.881 [http-nio-8091-exec-5] INFO  com.mli.assetjdbc.controller.AssetsController - 資產：null
+2024-03-20 11:45:15.960 [http-nio-8091-exec-3] INFO  com.mli.assetjdbc.controller.AssetsController - 資產編號：null
+2024-03-20 11:45:15.960 [http-nio-8091-exec-3] INFO  com.mli.assetjdbc.controller.AssetsController - 資產：null
+2024-03-20 11:45:16.720 [http-nio-8091-exec-6] INFO  com.mli.assetjdbc.controller.AssetsController - 資產編號：null
+2024-03-20 11:45:16.720 [http-nio-8091-exec-6] INFO  com.mli.assetjdbc.controller.AssetsController - 資產：null
+2024-03-20 11:45:17.321 [http-nio-8091-exec-7] INFO  com.mli.assetjdbc.controller.AssetsController - 資產編號：null
+2024-03-20 11:45:17.322 [http-nio-8091-exec-7] INFO  com.mli.assetjdbc.controller.AssetsController - 資產：null

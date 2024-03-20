@@ -3,6 +3,7 @@ package com.mli.assetjdbc.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class AssetsDaoJdbc implements AssetsDao {
 
     @Override
     @Nullable
-    public Assets select(String assetNumber) {
+    public Assets select(String assetNumber) throws EmptyResultDataAccessException {
         String sql = "SELECT * FROM assets WHERE asset_number = ?";
         return jdbcTemplate.queryForObject(sql, new AssetsRowMapper(), assetNumber);
     }

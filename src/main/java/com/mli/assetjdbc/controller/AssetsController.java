@@ -5,20 +5,18 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mli.assetjdbc.dto.AssetRequestDTO;
 import com.mli.assetjdbc.model.Assets;
 import com.mli.assetjdbc.service.AssetsService;
 
-import dto.AssetRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 
 /**
@@ -38,11 +36,11 @@ public class AssetsController {
      * @return 如果找到資產則回傳包含資產清單的 ResponseEntity，如果找不到則回傳 404 Not Found 狀態。
      */
     @Operation(summary = "從資料庫中擷取所有資產")
-    @GetMapping("/select-all")
+    @PostMapping("/select-all")
     public ResponseEntity<?> getAllAssets(){
         List<Assets> assets = assetsService.getAllAssets();
         if(assets.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("資料庫中沒有資產", HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(assets, HttpStatus.OK);
         }
@@ -61,7 +59,8 @@ public class AssetsController {
         logger.info("資產編號：{}", assetNumber);
         Assets asset = assetsService.getAssetByAssetNumber(assetNumber);
         if (asset == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            String message = "Asset with number " + assetNumber + " not found.";
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(asset, HttpStatus.OK);
         }
@@ -77,11 +76,19 @@ public class AssetsController {
     @PostMapping("/add")
     public ResponseEntity<String> addAsset(@RequestBody Assets asset) {
         logger.info("新增的資產：{}", asset);
-        assetsService.addAsset(asset);
-        if (asset == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>("資產新增成功", HttpStatus.CREATED);
+        String assetNumber = asset.getAssetNumber();
+
+        try {
+            Assets temp = assetsService.getAssetByAssetNumber(assetNumber);
+            if (temp == null) {
+                assetsService.addAsset(asset);
+                return new ResponseEntity<>("資產新增成功", HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>("已經有此編號了", HttpStatus.NOT_FOUND);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            logger.error("Error adding asset: {}", e.getMessage());
+            return new ResponseEntity<>("新增資產時出現錯誤", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -92,14 +99,24 @@ public class AssetsController {
      * @return 如果成功更新資產則回傳包含成功訊息的 ResponseEntity，如果資產為空則回傳 400 Bad Request 狀態。
      */
     @Operation(summary = "更新資產")
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<String> updateAsset(@RequestBody Assets asset) {
     	logger.info("controller, asset = {}", asset);
-        if (asset == null) {
-            return new ResponseEntity<>("Asset is null", HttpStatus.BAD_REQUEST);
+        String assetNumber = asset.getAssetNumber();
+
+        try {
+            Assets temp = assetsService.getAssetByAssetNumber(assetNumber);
+
+            if (temp != null) {
+                assetsService.updateAsset(asset);;
+                return new ResponseEntity<>("資產修改成功", HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>("沒有此編號", HttpStatus.NOT_FOUND);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            logger.error("Error adding asset: {}", e.getMessage());
+            return new ResponseEntity<>("新增資產時出現錯誤", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        assetsService.updateAsset(asset);
-        return new ResponseEntity<>("Asset updated successfully", HttpStatus.OK);
     }
 
     /**
@@ -109,16 +126,23 @@ public class AssetsController {
      * @return 如果成功刪除資產則回傳包含成功訊息的 ResponseEntity，如果資產編號為空則回傳 400 Bad Request 狀態。
      */
     @Operation(summary = "刪除資產")
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public ResponseEntity<String> deleteAsset(@RequestBody(required = false) AssetRequestDTO requestDTO) {
-        String assetNumber = (requestDTO != null && requestDTO.getAssetNumber() != null) ? requestDTO.getAssetNumber() : null;
-    	logger.info("controller, assetNumber = {}", assetNumber);
+    	logger.info("controller, requestDTO = {}", requestDTO);
+        String assetNumber = requestDTO.getAssetNumber();
 
-        if (assetNumber == null || assetNumber.isEmpty()) {
-            return new ResponseEntity<>("Asset number is required", HttpStatus.BAD_REQUEST);
+        try {
+            Assets temp = assetsService.getAssetByAssetNumber(assetNumber);
+
+            if (temp != null) {
+                assetsService.deleteAsset(assetNumber);
+                return new ResponseEntity<>("刪除成功", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("沒有此編號", HttpStatus.NOT_FOUND);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            logger.error("Error deleting asset: {}", e.getMessage());
+            return new ResponseEntity<>("刪除資產時出現錯誤", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        assetsService.deleteAsset(assetNumber);
-        return new ResponseEntity<>("Asset deleted successfully", HttpStatus.OK);
     }
 }
