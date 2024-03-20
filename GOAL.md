@@ -29,3 +29,18 @@
     - 更新一筆資料
     - 刪除一筆資料
 7. API的傳入與回傳值皆使用Json格式，回傳值請使用ResponseEntity
+
+
+
+git rm --cached assets.sql
+git rm --cached GOAL.md
+
+git rm -r --cached target/
+git rm -r --cached .mvn/
+git rm --cached .classpath
+git rm --cached .project
+git rm -r --cached .settings
+
+git rm -r --cached .vscode/
+
+git rm -r --cached /src/main/resources/asset-jdbc-logback/
