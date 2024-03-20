@@ -1,80 +1,80 @@
 ﻿### 使用說明
 
-1. JDK version = 11;
+1.  JDK version = 11;
 
-2. 運行 ApiSpringBoot2Application.java 
+2.  運行 ApiSpringBoot2Application.java
 
-      以啟動 Spring Boot
+    以啟動 Spring Boot
 
-3. (optional)使用 postman 進行以下測試
-      - 方法： 使用 POST 方法。
+3.  (optional)使用 postman 進行以下測試
 
-            網址： http://localhost:8091/practice5/assets/select-all
+    - 方法： 使用 POST 方法。
 
-            備註： 檢索所有資產的資訊。
+          網址： http://localhost:8091/practice5/assets/select-all
 
-            傳入值： 無。
+          備註： 檢索所有資產的資訊。
 
-      - 方法： 使用 POST 方法。
+          傳入值： 無。
 
-            網址： http://localhost:8091/practice5/assets/update
+    - 方法： 使用 POST 方法。
 
-            備註： 更新資產資訊。
+          網址： http://localhost:8091/practice5/assets/update
 
-            傳入值：
+          備註： 更新資產資訊。
 
-                  {
-                        "assetNumber": "A003",
-                        "assetName": "x",
-                        "unitOfUse": "YourUnitOfUse",
-                        "user": "YourUser",
-                        "creationDate": "2024-03-19",
-                        "value": 0
-                  }
+          傳入值：
 
-      - 方法： 使用 POST 方法。
+                {
+                      "assetNumber": "A003",
+                      "assetName": "x",
+                      "unitOfUse": "YourUnitOfUse",
+                      "User": "YourUser",
+                      "creationDate": "2024-03-19",
+                      "value": 0
+                }
 
-            網址： http://localhost:8091/practice5/assets/select-by-asset-number
+    - 方法： 使用 POST 方法。
 
-            備註： 根據資產編號檢索資產資訊。
+          網址： http://localhost:8091/practice5/assets/select-by-asset-number
 
-            傳入值： 
+          備註： 根據資產編號檢索資產資訊。
 
-            
-                  {
-                        "assetNumber" : "A050"
-                  }
-            
+          傳入值：
 
-      - 方法： 使用 POST 方法。
 
-            網址： http://localhost:8091/practice5/assets/add
+                {
+                      "assetNumber" : "A050"
+                }
 
-            備註： 新增資產。
+    - 方法： 使用 POST 方法。
 
-            傳入值： 
-            
-                  {
-                        "assetNumber": "A050",
-                        "assetName": "Computer",
-                        "unitOfUse": "IT Department",
-                        "user": "John Doe",
-                        "creationDate": "2024-03-19",
-                        "value": 1500.0
-                  }
+          網址： http://localhost:8091/practice5/assets/add
 
-      - 方法： 使用 POST 方法。
+          備註： 新增資產。
 
-            網址： http://localhost:8091/practice5/assets/delete
+          傳入值：
 
-            備註： 刪除資產。
+                {
+                      "assetNumber": "A050",
+                      "assetName": "Computer",
+                      "unitOfUse": "IT Department",
+                      "User": "John Doe",
+                      "creationDate": "2024-03-19",
+                      "value": 1500.0
+                }
 
-            傳入值： 
+    - 方法： 使用 POST 方法。
 
-                  {
-                        "assetNumber" : "A050"
-                  }
+          網址： http://localhost:8091/practice5/assets/delete
 
-4. 打開 http://localhost:8091/practice5/swagger-ui/index.html
+          備註： 刪除資產。
 
-      以查看api狀態
+          傳入值：
+
+                {
+                      "assetNumber" : "A050"
+                }
+
+4.  打開 http://localhost:8091/practice5/swagger-ui/index.html
+
+    以查看 api 狀態

@@ -1,6 +1,5 @@
 package com.mli.assetjdbc.model;
 
-
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -10,34 +9,35 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class Assets {
     @Schema(hidden = true)
     private int id;
-    
+
     @Schema(description = "The asset number")
     private String assetNumber;
-    
+
     @Schema(description = "The asset name")
     private String assetName;
-    
+
     @Schema(description = "The unit of use")
     private String unitOfUse;
-    
-    @Schema(description = "The user")
-    private String user;
-    
+
+    @Schema(description = "The User")
+    private String User;
+
     @Schema(description = "The creation date")
     private LocalDate creationDate;
-    
+
     @Schema(description = "The value")
     private double value;
 
     public Assets() {
     }
 
-    public Assets(int id, String assetNumber, String assetName, String unitOfUse, String user, LocalDate creationDate, double value) {
+    public Assets(int id, String assetNumber, String assetName, String unitOfUse, String User, LocalDate creationDate,
+            double value) {
         this.id = id;
         this.assetNumber = assetNumber;
         this.assetName = assetName;
         this.unitOfUse = unitOfUse;
-        this.user = user;
+        this.User = User;
         this.creationDate = creationDate;
         this.value = value;
     }
@@ -75,11 +75,11 @@ public class Assets {
     }
 
     public String getUser() {
-        return this.user;
+        return this.User;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser(String User) {
+        this.User = User;
     }
 
     public LocalDate getCreationDate() {
@@ -118,8 +118,8 @@ public class Assets {
         return this;
     }
 
-    public Assets user(String user) {
-        setUser(user);
+    public Assets User(String User) {
+        setUser(User);
         return this;
     }
 
@@ -141,25 +141,28 @@ public class Assets {
             return false;
         }
         Assets assets = (Assets) o;
-        return id == assets.id && Objects.equals(assetNumber, assets.assetNumber) && Objects.equals(assetName, assets.assetName) && Objects.equals(unitOfUse, assets.unitOfUse) && Objects.equals(user, assets.user) && Objects.equals(creationDate, assets.creationDate) && value == assets.value;
+        return id == assets.id && Objects.equals(assetNumber, assets.assetNumber)
+                && Objects.equals(assetName, assets.assetName) && Objects.equals(unitOfUse, assets.unitOfUse)
+                && Objects.equals(User, assets.User) && Objects.equals(creationDate, assets.creationDate)
+                && value == assets.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, assetNumber, assetName, unitOfUse, user, creationDate, value);
+        return Objects.hash(id, assetNumber, assetName, unitOfUse, User, creationDate, value);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", assetNumber='" + getAssetNumber() + "'" +
-            ", assetName='" + getAssetName() + "'" +
-            ", unitOfUse='" + getUnitOfUse() + "'" +
-            ", user='" + getUser() + "'" +
-            ", creationDate='" + getCreationDate() + "'" +
-            ", value='" + getValue() + "'" +
-            "}";
+                " id='" + getId() + "'" +
+                ", assetNumber='" + getAssetNumber() + "'" +
+                ", assetName='" + getAssetName() + "'" +
+                ", unitOfUse='" + getUnitOfUse() + "'" +
+                ", User='" + getUser() + "'" +
+                ", creationDate='" + getCreationDate() + "'" +
+                ", value='" + getValue() + "'" +
+                "}";
     }
 
 }

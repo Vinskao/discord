@@ -4,19 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
 import com.mli.assetjdbc.dao.UsersDaoJdbc;
 
+@Service
 public class UsersService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UsersDaoJdbc UsersDaoJdbc;
-    
-    public boolean authenticate(String username, String password) {
-        logger.info("service, Authenticating user: {}", username);
+
+    public boolean authenticate(String Username, String password) {
+        logger.info("service, Authenticating User: {}", Username);
 
         try {
-            return UsersDaoJdbc.authenticate(username, password);
+            return UsersDaoJdbc.authenticate(Username, password);
         } catch (EmptyResultDataAccessException e) {
             return false;
         }

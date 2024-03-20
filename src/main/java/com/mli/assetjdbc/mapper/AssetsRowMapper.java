@@ -17,12 +17,12 @@ public class AssetsRowMapper implements RowMapper<Assets> {
         assets.setAssetNumber(rs.getString("asset_number"));
         assets.setAssetName(rs.getString("asset_name"));
         assets.setUnitOfUse(rs.getString("unit_of_use"));
-        assets.setUser(rs.getString("user"));
-        
+        assets.setUser(rs.getString("User"));
+
         String creationDateStr = rs.getString("creation_date");
         LocalDate creationDate = LocalDate.parse(creationDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assets.setCreationDate(creationDate);
-        
+
         assets.setValue(rs.getDouble("value"));
         return assets;
     }

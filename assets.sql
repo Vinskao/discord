@@ -1,19 +1,19 @@
 .open mli-asset-management.db
 
 DROP TABLE assets;
-DROP TABLE users;
+DROP TABLE Users;
 DROP TABLE units;
 CREATE TABLE assets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     asset_number TEXT NOT NULL,
     asset_name TEXT NOT NULL,
     unit_of_use TEXT NOT NULL,
-    user TEXT NOT NULL, 
+    User TEXT NOT NULL, 
     creation_date DATE NOT NULL,
     value REAL NOT NULL
 );
 
-INSERT INTO assets (asset_number, asset_name, unit_of_use, user, creation_date, value) VALUES 
+INSERT INTO assets (asset_number, asset_name, unit_of_use, User, creation_date, value) VALUES 
 ('A001', 'Computer', 'IT Department', 'John', '2024-03-18', 1500.00),
 ('A002', 'Printer', 'Administration', 'Alice', '2024-03-18', 800.00),
 ('A003', 'Desk', 'Office Management', 'Bob', '2024-03-17', 200.00),
@@ -36,7 +36,7 @@ INSERT INTO assets (asset_number, asset_name, unit_of_use, user, creation_date, 
 ('A020', 'Desk Lamp', 'Office Management', 'Ava', '2024-03-09', 50.00);
 
 
-CREATE TABLE users (
+CREATE TABLE Users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL, 
     hire_date DATE NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE users (
     password TEXT NOT NULL
 );
 
-INSERT INTO users (name, hire_date, is_active, resignation_date, password)
+INSERT INTO Users (name, hire_date, is_active, resignation_date, password)
 VALUES 
 ('John', '2020-01-01', 1, NULL, 'password1'),
 ('Alice', '2020-02-01', 1, NULL, 'password2'),
