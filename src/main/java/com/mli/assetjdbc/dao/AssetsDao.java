@@ -10,4 +10,5 @@ public interface AssetsDao {
     boolean insert(Assets asset);
     boolean update(Assets asset);
     boolean delete(String assetNumber);
+	List<Assets> selectByUnitId(int unitId);
 }

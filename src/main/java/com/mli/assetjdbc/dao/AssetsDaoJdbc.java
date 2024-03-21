@@ -36,16 +36,17 @@ public class AssetsDaoJdbc implements AssetsDao {
     @Override
     public boolean insert(Assets asset) {
         logger.info("dao, asset = {}", asset);
-        String sql = "INSERT INTO assets (asset_number, asset_name, unit_of_use, User, creation_date, value) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO assets (asset_number, asset_name, unit_of_use, User, creation_date, value, unit_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql, asset.getAssetNumber(), asset.getAssetName(), asset.getUnitOfUse(),
-                asset.getUser(), asset.getCreationDate(), asset.getValue()) > 0;
+                asset.getUser(), asset.getCreationDate(), asset.getValue(), asset.getUnitId()) > 0;
     }
 
     @Override
     public boolean update(Assets asset) {
-        String sql = "UPDATE assets SET asset_name = ?, unit_of_use = ?, User = ?, creation_date = ?, value = ? WHERE asset_number = ?";
+        logger.info("dao, asset = {}", asset);
+        String sql = "UPDATE assets SET asset_name = ?, unit_of_use = ?, User = ?, creation_date = ?, value = ?, unit_id = ? WHERE asset_number = ?";
         return jdbcTemplate.update(sql, asset.getAssetName(), asset.getUnitOfUse(), asset.getUser(),
-                asset.getCreationDate(), asset.getValue(), asset.getAssetNumber()) > 0;
+                asset.getCreationDate(), asset.getValue(), asset.getUnitId(), asset.getAssetNumber()) > 0;
     }
 
     @Override
@@ -54,6 +55,14 @@ public class AssetsDaoJdbc implements AssetsDao {
 
         String sql = "DELETE FROM assets WHERE asset_number = ?";
         return jdbcTemplate.update(sql, assetNumber) > 0;
+    }
+    
+    @Override
+    public List<Assets> selectByUnitId(int unitId) {
+    	logger.info("dao, unitId = {}", unitId);
+
+    	String sql = "SELECT * FROM assets WHERE unit_id = ?";
+        return jdbcTemplate.query(sql, new AssetsRowMapper(), unitId);
     }
 
 }

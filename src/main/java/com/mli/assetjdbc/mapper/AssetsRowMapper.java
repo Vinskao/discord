@@ -7,7 +7,9 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.jdbc.core.RowMapper;
 import com.mli.assetjdbc.model.Assets;
-
+/**
+ * 資產行映射器
+ */
 public class AssetsRowMapper implements RowMapper<Assets> {
 
     @Override
@@ -24,6 +26,8 @@ public class AssetsRowMapper implements RowMapper<Assets> {
         assets.setCreationDate(creationDate);
 
         assets.setValue(rs.getDouble("value"));
+        assets.setUnitId(rs.getInt("unit_id"));
+
         return assets;
     }
 }

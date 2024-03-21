@@ -5,37 +5,41 @@ import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
-@Schema
+@Schema(description = "用戶")
 public class Users {
     @Schema(hidden = true)
     private int id;
 
-    @Schema(description = "The User's name")
+    @Schema(description = "The User's name", name = "名稱")
     private String name;
 
-    @Schema(description = "The date when the User was hired")
+    @Schema(description = "The date when the User was hired", name = "入職日期")
     private LocalDate hireDate;
 
-    @Schema(description = "Whether the User is currently active or not")
+    @Schema(description = "Whether the User is currently active or not", name = "是否活躍")
     private boolean isActive;
 
-    @Schema(description = "The date when the User resigned, if applicable")
+    @Schema(description = "The date when the User resigned, if applicable", name = "離職日期")
     private LocalDate resignationDate;
 
-    @Schema(description = "The User's password")
+    @Schema(description = "The User's password", name = "密碼")
     private String password;
+
+    @Schema(description = "The ID of the unit", name = "部門ID")
+    private int unitId;
+
 
     public Users() {
     }
 
-    public Users(int id, String name, LocalDate hireDate, boolean isActive, LocalDate resignationDate,
-            String password) {
+    public Users(int id, String name, LocalDate hireDate, boolean isActive, LocalDate resignationDate, String password, int unitId) {
         this.id = id;
         this.name = name;
         this.hireDate = hireDate;
         this.isActive = isActive;
         this.resignationDate = resignationDate;
         this.password = password;
+        this.unitId = unitId;
     }
 
     public int getId() {
@@ -90,6 +94,14 @@ public class Users {
         this.password = password;
     }
 
+    public int getUnitId() {
+        return this.unitId;
+    }
+
+    public void setUnitId(int unitId) {
+        this.unitId = unitId;
+    }
+
     public Users id(int id) {
         setId(id);
         return this;
@@ -120,6 +132,11 @@ public class Users {
         return this;
     }
 
+    public Users unitId(int unitId) {
+        setUnitId(unitId);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -127,27 +144,26 @@ public class Users {
         if (!(o instanceof Users)) {
             return false;
         }
-        Users User = (Users) o;
-        return id == User.id && Objects.equals(name, User.name) && Objects.equals(hireDate, User.hireDate)
-                && isActive == User.isActive && Objects.equals(resignationDate, User.resignationDate)
-                && Objects.equals(password, User.password);
+        Users users = (Users) o;
+        return id == users.id && Objects.equals(name, users.name) && Objects.equals(hireDate, users.hireDate) && isActive == users.isActive && Objects.equals(resignationDate, users.resignationDate) && Objects.equals(password, users.password) && unitId == users.unitId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, hireDate, isActive, resignationDate, password);
+        return Objects.hash(id, name, hireDate, isActive, resignationDate, password, unitId);
     }
 
     @Override
     public String toString() {
         return "{" +
-                " id='" + getId() + "'" +
-                ", name='" + getName() + "'" +
-                ", hireDate='" + getHireDate() + "'" +
-                ", isActive='" + isIsActive() + "'" +
-                ", resignationDate='" + getResignationDate() + "'" +
-                ", password='" + getPassword() + "'" +
-                "}";
+            " id='" + getId() + "'" +
+            ", name='" + getName() + "'" +
+            ", hireDate='" + getHireDate() + "'" +
+            ", isActive='" + isIsActive() + "'" +
+            ", resignationDate='" + getResignationDate() + "'" +
+            ", password='" + getPassword() + "'" +
+            ", unitId='" + getUnitId() + "'" +
+            "}";
     }
-
+    
 }

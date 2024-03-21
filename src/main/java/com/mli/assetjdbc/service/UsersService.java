@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.mli.assetjdbc.dao.UsersDaoJdbc;
+import com.mli.assetjdbc.dao.UsersDao;
 
 @Service
 public class UsersService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    private UsersDaoJdbc UsersDaoJdbc;
+    private UsersDao UsersDaoJdbc;
 
     public boolean authenticate(String Username, String password) {
         logger.info("service, Authenticating User: {}", Username);
