@@ -64,5 +64,42 @@ public class AssetsDAOJdbc implements AssetsDAO {
         String sql = "SELECT * FROM assets WHERE unit_id = ?";
         return jdbcTemplate.query(sql, new AssetsRowMapper(), unitId);
     }
+    
+    /**
+     * 從資料庫中獲取最後一筆資產的ID。
+     *
+     * @return 最後一筆資產的ID，如果資料庫中沒有資產則返回0。
+     */
+    @Override
+    public int getLastIdFromDatabase() {
+        int lastId = 0;
+        String sql = "SELECT MAX(id) AS last_id FROM assets";
 
+        try {
+            // 查詢資料庫並獲取最大ID
+            Integer maxId = jdbcTemplate.queryForObject(sql, Integer.class);
+            
+            // 如果查詢結果不為空，將最大ID賦值給lastId
+            if (maxId != null) {
+                lastId = maxId;
+            }
+        } catch (EmptyResultDataAccessException e) {
+            // 如果查詢結果為空，將最後ID設置為0
+            lastId = 0;
+        }
+
+        return lastId;
+    }
+    /**
+     * 生成新的資產ID。
+     *
+     * @return 新的資產ID
+     */
+    @Override
+    public int generateNewId() {
+        // 從資料庫中獲取最後一筆資產的ID
+        int lastId = getLastIdFromDatabase();
+        // 新的資產ID是最後一筆資產ID加1
+        return lastId + 1;
+    }
 }

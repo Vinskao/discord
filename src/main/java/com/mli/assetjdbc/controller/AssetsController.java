@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,22 +16,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mli.assetjdbc.dao.AssetsDAO;
 import com.mli.assetjdbc.dto.AssetRequestDTO;
+import com.mli.assetjdbc.dto.AssetsTotalDTO;
 import com.mli.assetjdbc.dto.UnitIdDTO;
 import com.mli.assetjdbc.model.Assets;
 import com.mli.assetjdbc.service.AssetsService;
+import com.mli.assetjdbc.util.CSVReader;
+import com.mli.assetjdbc.util.ExcelGenerator;
 
 import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 控制器類，用於處理有關資產的端點。
+ *
+ * @Author D3031104
+ * @version 1.0
  */
 @CrossOrigin
 @RestController
 @RequestMapping("/assets")
 public class AssetsController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	@Autowired
+    private AssetsDAO assetsDaoJdbc;
+	
 	@Autowired
 	private AssetsService assetsService;
 
@@ -169,4 +180,66 @@ public class AssetsController {
 	        return new ResponseEntity<>("使用unitId獲取資產時出錯：" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+	/**
+	 * 根據部門編號查詢資產列表，多回傳一筆total總計。
+	 *
+	 * @param unitIdDTO 包含部門編號的 DTO 物件。
+	 * @return 符合部門編號的資產列表和總計。
+	 */
+	@PostMapping("/select-by-unit-id/total")
+	@Operation(summary = "根據部門編號查詢資產列表，多回傳一筆total總計")
+	public ResponseEntity<?> getAssetsByUnitIdTotal(@RequestBody UnitIdDTO unitIdDTO) {
+	    logger.info("controller, unitIdDTO = {}", unitIdDTO);
+
+	    try {
+	        List<Assets> assets = assetsService.getAssetsByUnitId(unitIdDTO.getUnitId());
+	        AssetsTotalDTO assetsTotalDTO = new AssetsTotalDTO(assets);
+	        // 調用 ExcelGenerator 生成 Excel 文件
+	        byte[] excelBytes = ExcelGenerator.generateAssetExcel(assetsTotalDTO);
+	        // 將生成的 Excel 文件作為二進位數組回傳給前端
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	        headers.setContentDispositionFormData("filename", "assets.xlsx");
+	        headers.setContentLength(excelBytes.length);
+	        
+	        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+	    } catch (Exception e) {
+	        logger.error("Error fetching assets by unit id: {}", e.getMessage());
+	        return new ResponseEntity<>("使用unitId獲取資產時出錯：" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	/**
+	 * 從 CSV 檔案中讀取資料並新增多筆資產到資料庫。
+	 *
+	 * @return 如果成功新增資產則回傳包含成功訊息的 ResponseEntity，如果新增資產時發生錯誤則回傳 400 Bad Request 狀態。
+	 */
+	@Operation(summary = "使用csv新增一筆資產")
+	@PostMapping("/add-from-csv")
+	public ResponseEntity<String> addAssetsFromCSV() {
+        String filePath = "input/assets.csv";
+        List<Assets> assetsList = CSVReader.readCSV(filePath);
+
+		try {
+	        for (Assets asset : assetsList) {
+	        	int newId = assetsDaoJdbc.generateNewId();
+	        	asset.setId(newId); 
+	        	
+	            String assetNumber = asset.getAssetNumber();
+	            Assets temp = assetsService.getAssetByAssetNumber(assetNumber);
+	            if (temp == null) {
+	                assetsService.addAsset(asset);
+	            } else {
+	                logger.info("資產已存在於資料庫中，資產編號: {}", assetNumber);
+	                continue;
+	            }
+	        }
+			return new ResponseEntity<>("資產新增成功", HttpStatus.CREATED);
+		} catch (EmptyResultDataAccessException e) {
+			logger.error("Error adding asset: {}", e.getMessage());
+			return new ResponseEntity<>("新增資產時操作錯誤", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
 }

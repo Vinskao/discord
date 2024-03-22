@@ -1,0 +1,4 @@
+id	assetNumber	assetName	unitOfUse	user	creationDate	value	unitId
+1	A088	A	Administration	Alice	44136	8	2
+1	A089	B	Administration	Alice	44136	9	2
+1	A090	C	Administration	Alice	44136	7	2

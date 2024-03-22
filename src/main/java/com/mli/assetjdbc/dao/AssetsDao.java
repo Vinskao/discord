@@ -16,4 +16,8 @@ public interface AssetsDAO {
     boolean delete(String assetNumber);
 
     List<Assets> selectByUnitId(int unitId);
+    
+    int getLastIdFromDatabase();
+
+	int generateNewId();
 }

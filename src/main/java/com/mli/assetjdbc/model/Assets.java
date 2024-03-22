@@ -4,7 +4,11 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
+/**
+ * 
+ * @Author D3031104
+ * @version 1.0
+ */
 @Schema(description = "資產")
 public class Assets {
     @Schema(hidden = true)
@@ -20,7 +24,7 @@ public class Assets {
     private String unitOfUse;
 
     @Schema(description = "The User")
-    private String User;
+    private String user;
 
     @Schema(description = "The creation date")
     private LocalDate creationDate;
@@ -35,12 +39,12 @@ public class Assets {
     public Assets() {
     }
 
-    public Assets(int id, String assetNumber, String assetName, String unitOfUse, String User, LocalDate creationDate, double value, int unitId) {
+    public Assets(int id, String assetNumber, String assetName, String unitOfUse, String user, LocalDate creationDate, double value, int unitId) {
         this.id = id;
         this.assetNumber = assetNumber;
         this.assetName = assetName;
         this.unitOfUse = unitOfUse;
-        this.User = User;
+        this.user = user;
         this.creationDate = creationDate;
         this.value = value;
         this.unitId = unitId;
@@ -79,11 +83,11 @@ public class Assets {
     }
 
     public String getUser() {
-        return this.User;
+        return this.user;
     }
 
-    public void setUser(String User) {
-        this.User = User;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public LocalDate getCreationDate() {
@@ -158,12 +162,12 @@ public class Assets {
             return false;
         }
         Assets assets = (Assets) o;
-        return id == assets.id && Objects.equals(assetNumber, assets.assetNumber) && Objects.equals(assetName, assets.assetName) && Objects.equals(unitOfUse, assets.unitOfUse) && Objects.equals(User, assets.User) && Objects.equals(creationDate, assets.creationDate) && value == assets.value && unitId == assets.unitId;
+        return id == assets.id && Objects.equals(assetNumber, assets.assetNumber) && Objects.equals(assetName, assets.assetName) && Objects.equals(unitOfUse, assets.unitOfUse) && Objects.equals(user, assets.user) && Objects.equals(creationDate, assets.creationDate) && value == assets.value && unitId == assets.unitId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, assetNumber, assetName, unitOfUse, User, creationDate, value, unitId);
+        return Objects.hash(id, assetNumber, assetName, unitOfUse, user, creationDate, value, unitId);
     }
 
     @Override
