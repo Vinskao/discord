@@ -7,8 +7,12 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.jdbc.core.RowMapper;
 import com.mli.assetjdbc.model.Assets;
+
 /**
  * 資產行映射器
+ * 
+ * @Author D3031104
+ * @version 1.0
  */
 public class AssetsRowMapper implements RowMapper<Assets> {
 
@@ -18,8 +22,7 @@ public class AssetsRowMapper implements RowMapper<Assets> {
         assets.setId(rs.getInt("id"));
         assets.setAssetNumber(rs.getString("asset_number"));
         assets.setAssetName(rs.getString("asset_name"));
-        assets.setUnitOfUse(rs.getString("unit_of_use"));
-        assets.setUser(rs.getString("User"));
+        assets.setUserId(rs.getInt("user_id"));
 
         String creationDateStr = rs.getString("creation_date");
         LocalDate creationDate = LocalDate.parse(creationDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));

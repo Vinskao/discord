@@ -1,4 +1,4 @@
-id,assetNumber,assetName,unitofUse,user,creationDate,Value,unitID
-1,A091,string,string,string,2024/3/21,0,1
-1,A092,Scanner,IT Department,Jessica,2024/3/14,400,1
-1,A093,hahaha,hahaha,nini,2024/3/7,999,1
+id,assetNumber,assetName,userId,creationDate,value,unitID
+1,A091,string,1,2024/3/21,50,1
+1,A092,Scanner,2,2024/3/14,400,1
+1,A093,hahaha,3,2024/3/7,999,1

@@ -13,6 +13,13 @@ import org.slf4j.LoggerFactory;
 import com.mli.assetjdbc.mapper.AssetsRowMapper;
 import com.mli.assetjdbc.model.Assets;
 
+/**
+ * 
+ * 資產 DAO JDBC 實現
+ * 
+ * @Author D3031104
+ * @version 1.0
+ */
 @Repository
 public class AssetsDAOJdbc implements AssetsDAO {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -20,12 +27,24 @@ public class AssetsDAOJdbc implements AssetsDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * 從資料庫中選擇所有資產。
+     * 
+     * @return 資產列表
+     */
     @Override
     public List<Assets> selectAll() {
         String sql = "SELECT * FROM assets";
         return jdbcTemplate.query(sql, new AssetsRowMapper());
     }
 
+    /**
+     * 根據資產編號選擇資產。
+     * 
+     * @param assetNumber 資產編號
+     * @return 資產
+     * @throws EmptyResultDataAccessException 如果結果集為空，service會處理
+     */
     @Override
     @Nullable
     public Assets select(String assetNumber) throws EmptyResultDataAccessException {
@@ -33,22 +52,40 @@ public class AssetsDAOJdbc implements AssetsDAO {
         return jdbcTemplate.queryForObject(sql, new AssetsRowMapper(), assetNumber);
     }
 
+    /**
+     * 插入資產。
+     * 
+     * @param asset 資產
+     * @return 如果插入成功則返回 true，否則返回 false
+     */
     @Override
     public boolean insert(Assets asset) {
         logger.info("dao, asset = {}", asset);
-        String sql = "INSERT INTO assets (asset_number, asset_name, unit_of_use, User, creation_date, value, unit_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, asset.getAssetNumber(), asset.getAssetName(), asset.getUnitOfUse(),
-                asset.getUser(), asset.getCreationDate(), asset.getValue(), asset.getUnitId()) > 0;
+        String sql = "INSERT INTO assets (asset_number, asset_name, user_id, creation_date, value, unit_id) VALUES (?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, asset.getAssetNumber(), asset.getAssetName(), asset.getUserId(),
+                asset.getCreationDate(), asset.getValue(), asset.getUnitId()) > 0;
     }
 
+    /**
+     * 更新資產。
+     * 
+     * @param asset 資產
+     * @return 如果更新成功則返回 true，否則返回 false
+     */
     @Override
     public boolean update(Assets asset) {
         logger.info("dao, asset = {}", asset);
-        String sql = "UPDATE assets SET asset_name = ?, unit_of_use = ?, User = ?, creation_date = ?, value = ?, unit_id = ? WHERE asset_number = ?";
-        return jdbcTemplate.update(sql, asset.getAssetName(), asset.getUnitOfUse(), asset.getUser(),
+        String sql = "UPDATE assets SET asset_name = ? , user_id = ?, creation_date = ?, value = ?, unit_id = ? WHERE asset_number = ?";
+        return jdbcTemplate.update(sql, asset.getAssetName(), asset.getUserId(),
                 asset.getCreationDate(), asset.getValue(), asset.getUnitId(), asset.getAssetNumber()) > 0;
     }
 
+    /**
+     * 刪除資產。
+     * 
+     * @param assetNumber 資產編號
+     * @return 如果刪除成功則返回 true，否則返回 false
+     */
     @Override
     public boolean delete(String assetNumber) {
         logger.info("dao, assetNumber = {}", assetNumber);
@@ -57,6 +94,12 @@ public class AssetsDAOJdbc implements AssetsDAO {
         return jdbcTemplate.update(sql, assetNumber) > 0;
     }
 
+    /**
+     * 根據部門ID選擇資產。
+     * 
+     * @param unitId 部門ID
+     * @return 資產列表
+     */
     @Override
     public List<Assets> selectByUnitId(int unitId) {
         logger.info("dao, unitId = {}", unitId);
@@ -64,7 +107,7 @@ public class AssetsDAOJdbc implements AssetsDAO {
         String sql = "SELECT * FROM assets WHERE unit_id = ?";
         return jdbcTemplate.query(sql, new AssetsRowMapper(), unitId);
     }
-    
+
     /**
      * 從資料庫中獲取最後一筆資產的ID。
      *
@@ -78,7 +121,7 @@ public class AssetsDAOJdbc implements AssetsDAO {
         try {
             // 查詢資料庫並獲取最大ID
             Integer maxId = jdbcTemplate.queryForObject(sql, Integer.class);
-            
+
             // 如果查詢結果不為空，將最大ID賦值給lastId
             if (maxId != null) {
                 lastId = maxId;
@@ -90,6 +133,7 @@ public class AssetsDAOJdbc implements AssetsDAO {
 
         return lastId;
     }
+
     /**
      * 生成新的資產ID。
      *

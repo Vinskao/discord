@@ -13,10 +13,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.mli.assetjdbc.dto.AssetsTotalDTO;
 import com.mli.assetjdbc.model.Assets;
+
 /**
  * @Author D3031104
  * @version 1.0
- * 從 AssetsTotalDTO 生成 Excel 文件的工具類別。
+ *          從 AssetsTotalDTO 生成 Excel 文件的工具類別。
  */
 public class ExcelGenerator {
     /**
@@ -26,18 +27,19 @@ public class ExcelGenerator {
      * @return Excel 文件的二進位數組表示形式。
      */
     public static byte[] generateAssetExcel(AssetsTotalDTO assetsTotalDTO) {
-    	try {
-    		XSSFWorkbook workbook = new XSSFWorkbook();
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("Assets");
-            
+
             // 標題
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"ID", "Asset Number", "Asset Name", "Unit of Use", "Creation Date", "Value", "Unit ID", "User"};
-            for (int i=0 ; i< headers.length; i++) {
-            	Cell cell = headerRow.createCell(i);
+            String[] headers = { "ID", "Asset Number", "Asset Name", "Unit of Use", "Creation Date", "Value", "Unit ID",
+                    "User" };
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
             }
-            
+
             // 寫數據
             List<Assets> assetsList = assetsTotalDTO.getAssets();
             int rowNum = 1;
@@ -46,13 +48,14 @@ public class ExcelGenerator {
                 row.createCell(0).setCellValue(asset.getId());
                 row.createCell(1).setCellValue(asset.getAssetNumber());
                 row.createCell(2).setCellValue(asset.getAssetName());
-                row.createCell(3).setCellValue(asset.getUnitOfUse());
-                row.createCell(4).setCellValue(asset.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                row.createCell(3).setCellValue(asset.getUnitId());
+                row.createCell(4)
+                        .setCellValue(asset.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 row.createCell(5).setCellValue(asset.getValue());
                 row.createCell(6).setCellValue(asset.getUnitId());
-                row.createCell(7).setCellValue(asset.getUser());
+                row.createCell(7).setCellValue(asset.getUserId());
             }
-            
+
             // 添加總計在最後一行
             Row totalRow = sheet.createRow(rowNum);
             totalRow.createCell(0).setCellValue("Total");
@@ -64,10 +67,10 @@ public class ExcelGenerator {
             workbook.write(outputStream);
             workbook.close();
             return outputStream.toByteArray();
-    	} catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-    		return null;        
-    	}
+            return null;
+        }
     }
 
 }
