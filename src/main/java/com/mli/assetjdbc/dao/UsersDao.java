@@ -1,5 +1,5 @@
 package com.mli.assetjdbc.dao;
 
-public interface UsersDao {
+public interface UsersDAO {
     boolean authenticate(String Username, String password);
 }

@@ -12,11 +12,11 @@ import com.mli.assetjdbc.mapper.UnitsRowMapper;
 import com.mli.assetjdbc.model.Units;
 
 @Repository
-public class UnitsDaoJdbc implements UnitsDao {
+public class UnitsDAOJdbc implements UnitsDAO {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Units> findAll() {
@@ -24,10 +24,9 @@ public class UnitsDaoJdbc implements UnitsDao {
         return jdbcTemplate.query(sql, new UnitsRowMapper());
     }
 
-    
     @Override
     public List<Units> findById(int id) {
-    	logger.info("dao, id = {}", id);
+        logger.info("dao, id = {}", id);
 
         String sql = "SELECT * FROM units WHERE id = ?";
         return jdbcTemplate.query(sql, new UnitsRowMapper(), id);

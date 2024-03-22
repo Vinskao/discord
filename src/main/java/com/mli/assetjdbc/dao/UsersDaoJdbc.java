@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UsersDaoJdbc implements UsersDao {
+public class UsersDAOJdbc implements UsersDAO {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

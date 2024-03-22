@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.mli.assetjdbc.dao.AssetsDao;
+import com.mli.assetjdbc.dao.AssetsDAO;
 import com.mli.assetjdbc.model.Assets;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class AssetsService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private AssetsDao assetsDaoJdbc;
+    private AssetsDAO assetsDaoJdbc;
 
     /**
      * 獲取所有資產列表。
@@ -37,12 +37,12 @@ public class AssetsService {
      * @return 對應的資產對象，如果找不到則返回 null
      */
     public Assets getAssetByAssetNumber(String assetNumber) {
-    	logger.info("service, assetNumber = {}", assetNumber);
+        logger.info("service, assetNumber = {}", assetNumber);
 
         try {
             return assetsDaoJdbc.select(assetNumber);
         } catch (EmptyResultDataAccessException e) {
-            return null; 
+            return null;
         }
     }
 
@@ -52,7 +52,7 @@ public class AssetsService {
      * @param asset 要新增的資產對象
      */
     public void addAsset(Assets asset) {
-    	logger.info("service, asset = {}", asset);
+        logger.info("service, asset = {}", asset);
 
         assetsDaoJdbc.insert(asset);
     }
@@ -63,7 +63,7 @@ public class AssetsService {
      * @param asset 要更新的資產對象
      */
     public void updateAsset(Assets asset) {
-    	logger.info("service, asset = {}", asset);
+        logger.info("service, asset = {}", asset);
 
         assetsDaoJdbc.update(asset);
     }
@@ -74,11 +74,11 @@ public class AssetsService {
      * @param assetNumber 資產編號
      */
     public void deleteAsset(String assetNumber) {
-    	logger.info("service, assetNumber = {}", assetNumber);
+        logger.info("service, assetNumber = {}", assetNumber);
 
         assetsDaoJdbc.delete(assetNumber);
     }
-    
+
     /**
      * 根據部門編號查詢該部門擁有的資產列表。
      * 
@@ -86,7 +86,7 @@ public class AssetsService {
      * @return 對應部門的資產列表
      */
     public List<Assets> getAssetsByUnitId(int unitId) {
-    	logger.info("service, unitId = {}", unitId);
+        logger.info("service, unitId = {}", unitId);
 
         return assetsDaoJdbc.selectByUnitId(unitId);
     }

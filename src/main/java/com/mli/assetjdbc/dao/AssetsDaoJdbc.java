@@ -14,7 +14,7 @@ import com.mli.assetjdbc.mapper.AssetsRowMapper;
 import com.mli.assetjdbc.model.Assets;
 
 @Repository
-public class AssetsDaoJdbc implements AssetsDao {
+public class AssetsDAOJdbc implements AssetsDAO {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -56,12 +56,12 @@ public class AssetsDaoJdbc implements AssetsDao {
         String sql = "DELETE FROM assets WHERE asset_number = ?";
         return jdbcTemplate.update(sql, assetNumber) > 0;
     }
-    
+
     @Override
     public List<Assets> selectByUnitId(int unitId) {
-    	logger.info("dao, unitId = {}", unitId);
+        logger.info("dao, unitId = {}", unitId);
 
-    	String sql = "SELECT * FROM assets WHERE unit_id = ?";
+        String sql = "SELECT * FROM assets WHERE unit_id = ?";
         return jdbcTemplate.query(sql, new AssetsRowMapper(), unitId);
     }
 

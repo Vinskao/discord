@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mli.assetjdbc.model.Units;
 
-public interface UnitsDao {
+public interface UnitsDAO {
 
 	List<Units> findAll();
 
