@@ -25,15 +25,22 @@ public class UsersRowMapper implements RowMapper<Users> {
 		users.setIsAdmin(rs.getBoolean("is_admin"));
 
 		String hireDateStr = rs.getString("hire_date");
-		LocalDate hireDate = LocalDate.parse(hireDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		LocalDate hireDate = hireDateStr != null
+				? LocalDate.parse(hireDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+				: null;
+
 		users.setHireDate(hireDate);
 
 		String resignDateStr = rs.getString("resignation_date");
-		LocalDate resignDate = LocalDate.parse(resignDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		LocalDate resignDate = resignDateStr != null
+				? LocalDate.parse(resignDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+				: null;
+
 		users.setResignationDate(resignDate);
 
 		users.setUnitId(rs.getInt("unit_id"));
 		users.setPassword(rs.getString("password"));
+
 		return users;
 	}
 }

@@ -18,31 +18,31 @@ public class Users {
     private int id;
 
     /** 用户名 */
-    @Schema(description = "用戶名稱", name = "名稱")
+    @Schema(description = "用戶名稱")
     private String name;
 
     /** 入職日期 */
-    @Schema(description = "用戶入職日期", name = "入職日期")
+    @Schema(description = "用戶入職日期")
     private LocalDate hireDate;
 
     /** 是否活躍 */
-    @Schema(description = "用戶是否活躍", name = "是否活躍")
+    @Schema(description = "用戶是否活躍")
     private boolean isActive;
 
     /** 是否管理员 */
-    @Schema(description = "用戶是否是管理员", name = "是否管理员")
+    @Schema(description = "用戶是否是管理员")
     private boolean isAdmin;
 
     /** 離職日期 */
-    @Schema(description = "用戶離職日期", name = "離職日期")
+    @Schema(description = "用戶離職日期")
     private LocalDate resignationDate;
 
     /** 密碼 */
-    @Schema(description = "用戶密碼", name = "密碼")
+    @Schema(description = "用戶密碼")
     private String password;
 
     /** 部門ID */
-    @Schema(description = "用戶所屬部門ID", name = "部門ID")
+    @Schema(description = "用戶所屬部門ID")
     private int unitId;
 
     public Users() {

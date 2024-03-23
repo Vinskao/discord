@@ -2,6 +2,11 @@ package com.mli.assetjdbc.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * 
+ * @version 1.0
+ * @author D3031104
+ */
 @Schema(description = "部門編號請求資料")
 public class UnitIdDTO {
     @Schema(description = "部門編號", example = "1")

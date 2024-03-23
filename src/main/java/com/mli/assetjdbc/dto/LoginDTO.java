@@ -3,10 +3,15 @@ package com.mli.assetjdbc.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
+/**
+ * 
+ * @version 1.0
+ * @author D3031104
+ */
 @Schema
 public class LoginDTO {
-    @Schema(description = "The User's name")
-    private String name;
+    @Schema(description = "The User's id")
+    private int id;
 
     @Schema(description = "The User's password")
     private String password;
@@ -14,17 +19,17 @@ public class LoginDTO {
     public LoginDTO() {
     }
 
-    public LoginDTO(String name, String password) {
-        this.name = name;
+    public LoginDTO(int id, String password) {
+        this.id = id;
         this.password = password;
     }
 
-    public String getName() {
-        return this.name;
+    public int getId() {
+        return this.id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPassword() {
@@ -35,8 +40,8 @@ public class LoginDTO {
         this.password = password;
     }
 
-    public LoginDTO name(String name) {
-        setName(name);
+    public LoginDTO id(int id) {
+        setId(id);
         return this;
     }
 
@@ -53,18 +58,18 @@ public class LoginDTO {
             return false;
         }
         LoginDTO loginDTO = (LoginDTO) o;
-        return Objects.equals(name, loginDTO.name) && Objects.equals(password, loginDTO.password);
+        return id == loginDTO.id && Objects.equals(password, loginDTO.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, password);
+        return Objects.hash(id, password);
     }
 
     @Override
     public String toString() {
         return "{" +
-                " name='" + getName() + "'" +
+                " id='" + getId() + "'" +
                 ", password='" + getPassword() + "'" +
                 "}";
     }

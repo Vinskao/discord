@@ -25,9 +25,9 @@ import io.swagger.v3.oas.annotations.Operation;
 public class UnitsController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
+    @Autowired
     private UnitsService unitsService;
-    
+
     /**
      * 檢索所有單位。
      * 
@@ -44,13 +44,13 @@ public class UnitsController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
-    @PostMapping("/findById")
+
+    @PostMapping("/find-by-id")
     @Operation(summary = "Retrieve a unit by its ID")
     public ResponseEntity<List<Units>> getUnitById(@RequestBody UnitIdDTO unitIdDTO) {
-		logger.info("controller, unitIdDTO = {}", unitIdDTO);
-		int id = unitIdDTO.getUnitId();
-    	try {
+        logger.info("controller, unitIdDTO = {}", unitIdDTO);
+        int id = unitIdDTO.getUnitId();
+        try {
             List<Units> unit = unitsService.findUnitById(id);
             return new ResponseEntity<>(unit, HttpStatus.OK);
         } catch (Exception e) {
