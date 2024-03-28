@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-03-28T11:22:45.827Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="IE8IZH8ROF8iBjCjNBVg" version="24.2.0" type="github">
+<mxfile host="app.diagrams.net" modified="2024-03-28T11:23:05.109Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="ex7ZXFn84H6IUNlnEnc1" version="24.2.0" type="github">
   <diagram name="Page-1" id="74e2e168-ea6b-b213-b513-2b3c1d86103e">
-    <mxGraphModel dx="1221" dy="658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+    <mxGraphModel dx="1436" dy="774" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -149,6 +149,9 @@
         <mxCell id="77e6c97f196da883-4" value="message 訊息貼文模組" style="swimlane;html=1;startSize=20;strokeColor=#FF0808;" parent="77e6c97f196da883-1" vertex="1">
           <mxGeometry x="660" y="20" width="310" height="760" as="geometry" />
         </mxCell>
+        <mxCell id="caw4e2l-Zk4vS1gQuyCD-33" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" edge="1" parent="77e6c97f196da883-4" source="TCiXfk5xuBNNh0pUbAXc-120" target="TCiXfk5xuBNNh0pUbAXc-170">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="TCiXfk5xuBNNh0pUbAXc-48" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;發貼文：/message/admin/**&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=8;align=center;strokeColor=#00B3FF;" parent="77e6c97f196da883-4" vertex="1">
           <mxGeometry y="20" width="310" height="30" as="geometry" />
         </mxCell>
@@ -166,9 +169,6 @@
         </mxCell>
         <mxCell id="caw4e2l-Zk4vS1gQuyCD-21" value="req：text, userId, roomId&amp;nbsp;&lt;div&gt;res：1&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="77e6c97f196da883-4">
           <mxGeometry x="210" y="570" width="100" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="caw4e2l-Zk4vS1gQuyCD-33" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" edge="1" parent="77e6c97f196da883-4" source="TCiXfk5xuBNNh0pUbAXc-120" target="TCiXfk5xuBNNh0pUbAXc-170">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
