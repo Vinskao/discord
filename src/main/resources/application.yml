@@ -1,26 +1,30 @@
 spring:
   application:
-    name: assetmybatis
+    name: discord
   datasource:
-    url: jdbc:sqlite:src/main/resources/mli-asset-management.db
-    driver-class-name: org.sqlite.JDBC
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;databaseName=discord;trustServerCertificate=true
+    username: sa
+    password: Wawi247525=
   devtools:
     restart:
       enabled: true
+  security:
+    user:
+      password: wawi247525
 
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     persistAuthorization: true
-    
+
 server:
-  port: 8091
+  port: 8088
   servlet:
-    context-path: /practice5
+    session:
+      cookie:
+        http-only: true
 
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
-
-
-
