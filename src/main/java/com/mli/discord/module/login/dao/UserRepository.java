@@ -81,4 +81,17 @@ public class UserRepository {
     public User findById(int userId) {
         return userDAO.findById(userId).get(0);
     }
+
+    public Integer createUser(String username, String password) {
+        // 创建一个新的 User 对象
+        User newUser = new User(password, username, Authority.NORMAL.toString());
+
+        // 对用户密码进行加密
+        encodePasswords(newUser);
+
+        // 将新用户信息插入数据库
+        userDAO.insertUser(newUser);
+
+        return 1;
+    }
 }

@@ -29,14 +29,14 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserDAO userDao;
+    private UserDAO userDAO;
 
     public User findByUsernameAndPassword(String username, String password) {
         logger.info("service, Authenticating User: {}", username);
 
         try {
             // 从数据库中获取用户存储的加密密码
-            User user = userDao.findEncodedPasswordByUsername(username);
+            User user = userDAO.findEncodedPasswordByUsername(username);
 
             if (user != null) {
                 // 从用户对象中获取存储的加密密码
@@ -63,15 +63,33 @@ public class UserService {
      * @param userId 使用者 ID
      * @return 匹配給定 ID 的使用者清單，如果找不到則返回空列表
      */
-    @Operation(description = "Find user by user ID")
+    @Operation(summary = "Find user by user ID")
     public List<User> findById(int userId) {
         logger.info("service, userId {}", userId);
 
         try {
-            return userDao.findById(userId);
+            return userDAO.findById(userId);
         } catch (EmptyResultDataAccessException e) {
             logger.error("service, User with id {} not found", userId);
             return null;
+        }
+    }
+
+    @Operation(summary = "更新密碼")
+    public boolean updatePassword(String username, String newPassword) {
+        logger.info("服務層，正在更新用戶 {} 的密碼", username);
+
+        try {
+            boolean updated = userDAO.updatePasswordByUsername(username, passwordEncoder.encode(newPassword)) > 0;
+            if (updated) {
+                logger.info("密碼更新成功");
+            } else {
+                logger.info("密碼更新失敗");
+            }
+            return updated;
+        } catch (Exception e) {
+            logger.error("更新密碼時出現異常: {}", e.getMessage());
+            return false;
         }
     }
 }

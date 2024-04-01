@@ -61,6 +61,13 @@ CREATE TABLE messages (
     FOREIGN KEY (room_id) REFERENCES room(id),
     FOREIGN KEY (username) REFERENCES users(username)
 );
+CREATE TABLE security_questions (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    username NVARCHAR(50),
+    question NVARCHAR(MAX),
+    answer NVARCHAR(MAX),
+    FOREIGN KEY (username) REFERENCES users(username)
+);
 
 
 INSERT INTO [group] (name) VALUES ('Group 1');
@@ -69,6 +76,12 @@ INSERT INTO [group] (name) VALUES ('Group 3');
 INSERT INTO room (name, group_id, visibility) VALUES ('Room 1', 1, 1);
 INSERT INTO room (name, group_id, visibility) VALUES ('Room 2', 1, 1);
 INSERT INTO room (name, group_id, visibility) VALUES ('Room 3', 1, 1);
+INSERT INTO room (name, group_id, visibility) VALUES ('Room a', 2, 1);
+INSERT INTO room (name, group_id, visibility) VALUES ('Room b', 2, 1);
+INSERT INTO room (name, group_id, visibility) VALUES ('Room c', 2, 1);
+INSERT INTO room (name, group_id, visibility) VALUES ('Room 9', 3, 1);
+INSERT INTO room (name, group_id, visibility) VALUES ('Room 99', 3, 1);
+INSERT INTO room (name, group_id, visibility) VALUES ('Room 999', 3, 1);
 INSERT INTO user_to_group (username, group_id) VALUES
 ('chiaki@mli.com', 1),
 ('min@mli.com', 1),

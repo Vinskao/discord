@@ -31,6 +31,12 @@ public class User {
     public User() {
     }
 
+    public User(String password, String username, String authority) {
+        this.password = password;
+        this.username = username;
+        this.authority = authority;
+    }
+
     public User(Integer id, String password, String username, String authority) {
         this.id = id;
         this.password = password;

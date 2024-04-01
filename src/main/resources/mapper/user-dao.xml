@@ -34,5 +34,10 @@
     <select id="findByUsername" resultType="com.mli.discord.module.login.model.User">
         SELECT * FROM users WHERE username = #{username}
     </select>
+    <update id="updatePasswordByUsername" parameterType="map">
+        UPDATE users
+        SET password = #{password}
+        WHERE username = #{username}
+    </update>
 
 </mapper>

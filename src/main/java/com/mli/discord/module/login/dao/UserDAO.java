@@ -3,6 +3,7 @@ package com.mli.discord.module.login.dao;
 import java.util.List;
 
 import com.mli.discord.module.login.model.User;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * User DAO MyBatis Mapper
@@ -57,5 +58,7 @@ public interface UserDAO {
      * @return 用户对象
      */
     User findByUsername(String username);
+
+    Integer updatePasswordByUsername(@Param("username") String username, @Param("password") String newPassword);
 
 }
