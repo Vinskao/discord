@@ -1,11 +1,18 @@
 package com.mli.discord.module.login.service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +30,36 @@ import io.swagger.v3.oas.annotations.Operation;
  */
 @Transactional
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserDAO userDAO;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        try {
+            User user = userDAO.findByUsername(username);
+            if (user == null) {
+                throw new UsernameNotFoundException("User not found with username: " + username);
+            }
+
+            // 解析用户的权限字段，并为每个权限创建GrantedAuthority对象
+            List<GrantedAuthority> authorities = Arrays.stream(user.getAuthority().split(","))
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
+            return new org.springframework.security.core.userdetails.User(
+                    user.getUsername(),
+                    user.getPassword(),
+                    authorities // 将权限列表传递给UserDetails对象
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new UsernameNotFoundException("User not found with username: " + username, e);
+        }
+    }
 
     public User findByUsernameAndPassword(String username, String password) {
         logger.info("service, Authenticating User: {}", username);

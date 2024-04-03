@@ -1,18 +1,31 @@
 package com.mli.discord.module.message.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,14 +59,15 @@ public class ChatController {
 	 */
 	@PostMapping("/send")
 	public ResponseEntity<Void> sendMessage(@RequestBody MessageDTO textMessageDTO) {
+
 		// Log received message
 		System.out.println("Received message: " + textMessageDTO.getMessage());
 
 		// Broadcast message
-		template.convertAndSend("/topic/message", textMessageDTO);
+		template.convertAndSend("/topic/message/" + textMessageDTO.getRoomId(), textMessageDTO);
 
 		// Log after broadcasting
-		System.out.println("Message broadcasted to /topic/message");
+		System.out.println("Message broadcasted to1 /topic/message");
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -64,8 +78,13 @@ public class ChatController {
 	 * @param textMessageDTO 接收到的消息
 	 */
 	@MessageMapping("/sendMessage")
-	public void receiveMessage(@Payload MessageDTO textMessageDTO) {
-		// receive message from client
+	public void receiveMessage(@Payload MessageDTO messageDTO) {
+	    logger.info("Received STOMP message: {} from user: {} in room: {}", messageDTO.getMessage(), messageDTO.getUsername(), messageDTO.getRoomId());
+
+		// Broadcasting the message to the specified room ID.
+	    template.convertAndSend("/topic/message/" + messageDTO.getRoomId(), messageDTO);
+
+	    logger.info("(sendMessage) Broadcasted STOMP message to /topic/message/{}", messageDTO.getRoomId());
 	}
 
 	/**
@@ -75,14 +94,13 @@ public class ChatController {
 	 * @return MessageDTO
 	 */
 	@SendTo("/topic/message")
-	public MessageDTO broadcastMessage(@Payload MessageDTO messageDTO) {
+	public MessageDTO broadcastMessage(@Payload MessageDTO textMessageDTO) {
 		// 日誌記錄，以便於調試和監控
-		logger.info("Broadcasting message from {}: {}", messageDTO.getUsername(), messageDTO.getMessage());
-
+		logger.info("Broadcasting message from {}: {}", textMessageDTO.getUsername(), textMessageDTO.getMessage());
 		// 將消息廣播到 /topic/message
-		template.convertAndSend("/topic/message", messageDTO);
+		template.convertAndSend("/topic/message/" + textMessageDTO.getRoomId(), textMessageDTO);
 
-		return messageDTO;
+		return textMessageDTO;
 	}
 
 	/**
@@ -92,7 +110,8 @@ public class ChatController {
 	 * @param headerAccessor 消息頭訪問器
 	 */
 	@MessageMapping("/message")
-	public void receiveAndBroadcastMessage(@Payload MessageDTO messageDTO, SimpMessageHeaderAccessor headerAccessor) {
+	public void receiveAndBroadcastMessage(@Payload MessageDTO textMessageDTO,
+			SimpMessageHeaderAccessor headerAccessor) {
 		Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
 		if (sessionAttributes == null) {
 			logger.info("Session attributes are null");
@@ -106,13 +125,11 @@ public class ChatController {
 
 		// 從sessionAttributes中獲取username，並處理它
 		String username = (String) sessionAttributes.get("username");
-//		String username = fullUsername.split("@")[0]; // 僅獲取@之前的部分
-
-		messageDTO.setUsername(username);
-		logger.info("Received STOMP message from {}: {}", username, messageDTO.getMessage());
-		Message message = messageService.saveMessage(messageDTO);
-		template.convertAndSend("/topic/message", message);
-		logger.info("STOMP Message broadcasted to /topic/message");
+		textMessageDTO.setUsername(username);
+		logger.info("Received STOMP message from {}: {}", username, textMessageDTO.getMessage());
+		Message message = messageService.saveMessage(textMessageDTO);
+		template.convertAndSend("/topic/message/" + textMessageDTO.getRoomId(), message);
+		logger.info("(message) STOMP Message broadcasted to /topic/message/" + textMessageDTO.getRoomId());
 
 	}
 
@@ -127,4 +144,50 @@ public class ChatController {
 		List<Message> messages = messageService.getMessagesByRoomId(roomIdDTO.getRoomId());
 		return ResponseEntity.ok(messages);
 	}
+
+	@PostMapping("/export-chat-history")
+	public ResponseEntity<byte[]> exportChatHistory(@RequestBody RoomIdDTO roomIdDTO) {
+		logger.info("Exporting chat history for room ID: {}", roomIdDTO.getRoomId());
+
+		// 创建新的Excel工作簿
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			XSSFSheet sheet = workbook.createSheet("Chat History");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+			// 创建标题行
+			Row headerRow = sheet.createRow(0);
+			String[] headerStrings = { "Type", "Username", "Time", "Message" };
+			for (int i = 0; i < headerStrings.length; i++) {
+				Cell cell = headerRow.createCell(i);
+				cell.setCellValue(headerStrings[i]);
+			}
+
+			// 填充数据
+			List<Message> messages = messageService.getMessagesByRoomId(roomIdDTO.getRoomId());
+			int rowNum = 1;
+			for (Message msg : messages) {
+				Row row = sheet.createRow(rowNum++);
+				row.createCell(0).setCellValue(msg.getType().toString());
+				row.createCell(1).setCellValue(msg.getUsername());
+				row.createCell(2).setCellValue(msg.getTime().format(formatter));
+				row.createCell(3).setCellValue(msg.getMessage());
+			}
+
+			// 将工作簿写入到字节输出流
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			workbook.write(outputStream);
+
+			// 设置响应头信息
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentDisposition(
+					ContentDisposition.builder("attachment").filename("chat_history.xlsx").build());
+			headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+			return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+		} catch (IOException e) {
+			logger.error("Error while exporting chat history", e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }

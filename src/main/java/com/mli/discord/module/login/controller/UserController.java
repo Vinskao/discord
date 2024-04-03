@@ -1,7 +1,8 @@
 package com.mli.discord.module.login.controller;
 
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -9,9 +10,13 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,42 +49,23 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-    /**
-     * 使用者登入
-     * 
-     * @param loginDTO 登入資訊的資料傳輸物件
-     * @param request  HTTP 請求物件
-     * @return ResponseEntity 包含認證使用者資訊或錯誤訊息的回應實體
-     */
-    @Operation(summary = "使用者登入")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
-        String username = loginDTO.getUsername();
-        String password = loginDTO.getPassword();
-        logger.info("使用者登入嘗試：{}", username);
-
         try {
-            User authenticatedUser = userService.findByUsernameAndPassword(username, password);
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            if (authenticatedUser != null) {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("username", authenticatedUser.getUsername());
-                session.setAttribute("authenticatedUser", authenticatedUser);
-                logger.info("使用者名稱 {} 新增到會話，會話 ID 為 {}", username, session.getId());
+            User user = (User) userService.loadUserByUsername(loginDTO.getUsername());
+            HttpSession session = request.getSession(true);
+            session.setAttribute("username", user.getUsername());
 
-                Enumeration<String> attributeNames = session.getAttributeNames();
-                while (attributeNames.hasMoreElements()) {
-                    String attributeName = attributeNames.nextElement();
-                    logger.info("會話屬性: {} = {}", attributeName, session.getAttribute(attributeName));
-                }
-                return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("帳號或密碼錯誤", HttpStatus.UNAUTHORIZED);
-            }
-        } catch (EmptyResultDataAccessException e) {
-            logger.error("使用者登入期間出錯: {}", e.getMessage());
-            return new ResponseEntity<>("登入中出錯", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.ok().body("Login Successful");
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Failed: " + e.getMessage());
         }
     }
 
@@ -164,6 +150,22 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body("密碼更新失敗");
         }
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            String authorities = (String) session.getAttribute("authorities");
+            if (username != null && authorities != null) {
+                Map<String, String> userInfo = new HashMap<>();
+                userInfo.put("username", username);
+                userInfo.put("authorities", authorities);
+                return ResponseEntity.ok(userInfo);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active session");
     }
 
 }

@@ -1,4 +1,4 @@
-package com.mli.discord.module.login.util;
+package com.mli.discord.core.util;
 // package com.mli.discord.module.login.util;
 
 // import java.io.ByteArrayOutputStream;

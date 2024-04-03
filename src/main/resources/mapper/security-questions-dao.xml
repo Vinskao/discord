@@ -19,4 +19,13 @@
         SET question = #{question}, answer = #{answer}
         WHERE username = #{username}
     </update>
+
+    <select id="getQuestionByUsername" parameterType="String" resultType="String">
+        SELECT question FROM security_questions WHERE username = #{username}
+    </select>
+
+    <select id="verifyAnswer" parameterType="com.mli.discord.module.login.model.SecurityQuestion" resultType="Integer">
+        SELECT COUNT(*) FROM security_questions
+        WHERE username = #{username} AND question = #{question} AND answer = #{answer}
+    </select>
 </mapper>

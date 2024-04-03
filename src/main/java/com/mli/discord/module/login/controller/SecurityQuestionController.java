@@ -9,11 +9,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mli.discord.module.login.dto.UsernameDTO;
 import com.mli.discord.module.login.model.SecurityQuestion;
 import com.mli.discord.module.login.service.SecurityQuestionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+/**
+ * 安全問題控制器類，處理與安全問題相關的 HTTP 請求。
+ * 
+ * @version 1.0
+ * @author D3031104
+ */
 @RestController
 public class SecurityQuestionController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,12 +38,17 @@ public class SecurityQuestionController {
     @PostMapping("/add-security-question")
     public ResponseEntity<String> addSecurityQuestion(@RequestBody SecurityQuestion securityQuestion) {
         try {
-            securityQuestionService.addSecurityQuestion(securityQuestion);
-            logger.info("安全问题添加成功");
-            return new ResponseEntity<>("安全问题添加成功", HttpStatus.CREATED);
+            Integer result = securityQuestionService.addSecurityQuestion(securityQuestion);
+            if (result > 0) {
+                logger.info("安全問題新增成功");
+                return new ResponseEntity<>("安全問題新增成功", HttpStatus.OK);
+            } else {
+                logger.info("安全問題新增失敗");
+                return new ResponseEntity<>("安全問題新增失敗", HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
-            logger.error("添加安全问题时出现异常：{}", e.getMessage());
-            return new ResponseEntity<>("添加安全问题失败", HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("新增安全問題時出現異常：{}", e.getMessage());
+            return new ResponseEntity<>("新增安全問題失敗", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -52,15 +64,33 @@ public class SecurityQuestionController {
         try {
             Integer result = securityQuestionService.modifySecurityQuestion(securityQuestion);
             if (result > 0) {
-                logger.info("安全問題修改成功，問題ID: {}", securityQuestion.getId());
+                logger.info("安全問題修改成功");
                 return new ResponseEntity<>("安全問題修改成功", HttpStatus.OK);
             } else {
-                logger.info("安全問題修改失敗，問題ID: {}", securityQuestion.getId());
+                logger.info("安全問題修改失敗");
                 return new ResponseEntity<>("安全問題修改失敗", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             logger.error("修改安全問題時出現異常：{}", e.getMessage());
-            return new ResponseEntity<>("修改安全問題失敗", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("修改安全問題失敗", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Operation(summary = "獲取安全問題")
+    @PostMapping("/get-question")
+    public ResponseEntity<String> getQuestionByUsername(@RequestBody UsernameDTO usernameDTO) {
+        String question = securityQuestionService.getQuestionByUsername(usernameDTO.getUsername());
+        if (question != null) {
+            return ResponseEntity.ok(question);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "驗證安全問題答案")
+    @PostMapping("/verify-answer")
+    public ResponseEntity<Boolean> verifyAnswer(@RequestBody SecurityQuestion securityQuestion) {
+        boolean isCorrect = securityQuestionService.verifyAnswer(securityQuestion);
+        return ResponseEntity.ok(isCorrect);
     }
 }

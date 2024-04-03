@@ -25,6 +25,8 @@ public class UserToRoomController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addUserToRoom(@RequestBody UserToRoom userToRoom) {
+        logger.info("addUserToRoom: userToRoom  -", userToRoom.getRoomId());
+
         try {
             int rowsAffected = userToRoomService.addUserToRoom(userToRoom);
             if (rowsAffected > 0) {
@@ -41,6 +43,8 @@ public class UserToRoomController {
 
     @PostMapping("/remove")
     public ResponseEntity<?> removeUserFromRoom(@RequestBody UserToRoom userToRoom) {
+        logger.info("removeUserFromRoom: userToRoom  -", userToRoom.getRoomId());
+
         try {
             int rowsAffected = userToRoomService.removeUserFromRoom(userToRoom);
             if (rowsAffected > 0) {

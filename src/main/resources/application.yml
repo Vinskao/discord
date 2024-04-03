@@ -13,6 +13,10 @@ spring:
   security:
     user:
       password: wawi247525
+  
+#logging:
+#  level.org.springframework.security: DEBUG
+
 
 springdoc:
   api-docs:

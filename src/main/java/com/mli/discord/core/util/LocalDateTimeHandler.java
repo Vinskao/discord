@@ -1,4 +1,4 @@
-package com.mli.discord.module.login.util;
+package com.mli.discord.core.util;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

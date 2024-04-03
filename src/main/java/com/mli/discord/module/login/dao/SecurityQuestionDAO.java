@@ -7,4 +7,7 @@ public interface SecurityQuestionDAO {
 
     Integer modifySecurityQuestion(SecurityQuestion securityQuestion);
 
+    String getQuestionByUsername(String username);
+
+    Integer verifyAnswer(SecurityQuestion securityQuestion);
 }

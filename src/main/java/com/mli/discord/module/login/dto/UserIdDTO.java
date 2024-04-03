@@ -3,7 +3,7 @@ package com.mli.discord.module.login.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * 
+ *
  * @version 1.0
  * @author D3031104
  */

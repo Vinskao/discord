@@ -1,21 +1,33 @@
 package com.mli.discord.core.config.security;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.mli.discord.module.login.service.UserService;
 
 /**
  * 
@@ -25,14 +37,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    // prevent circular dependency
+    @Autowired
+    @Lazy
+    private UserService userService;
 
     @Bean
-    public AuthenticationProvider authenticationProvider(
-            UserDetailsService userDetailsService,
-            BCryptPasswordEncoder passwordEncoder) {
-        var provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
@@ -40,15 +54,41 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
-                .cors().and()
-                .csrf().disable() // 禁用CSRF保护
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 使用无状态会话
+                .csrf().disable()
+                .authenticationProvider(authenticationProvider())
+                .formLogin()
+                .loginProcessingUrl("/user/login")
+                .successHandler((request, response, authentication) -> {
+                    // Handle successful authentication
+                    HttpSession session = request.getSession(true);
+                    session.setAttribute("username", authentication.getName());
+
+                    // 获取用户权限并转换为逗号分隔的字符串
+                    String authorities = authentication.getAuthorities().stream()
+                            .map(GrantedAuthority::getAuthority)
+                            .collect(Collectors.joining(","));
+                    session.setAttribute("authorities", authorities);
+
+                    response.setStatus(HttpServletResponse.SC_OK);
+                })
+                .failureHandler((request, response, exception) -> {
+                    // Handle login failure
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Login failed: " + exception.getMessage());
+                })
                 .and()
+                .cors()
+                .and()
+
+                // .sessionManagement()
+                // .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                // .and()
                 .authorizeRequests()
-                .antMatchers("/user/check-session", "/user/logout", "/user/login", "/user/find-by-id", "/user/register")
+                .antMatchers("/user/check-session", "/user/logout", "/user/login",
+                        "/user/find-by-id", "/user/register", "/user/me")
+                // .antMatchers("/**")
                 .permitAll()
-                .antMatchers("/chat/export").hasAuthority("ADMIN") // 仅ADMIN角色可以访问
+                .antMatchers("/export-chat-history").hasAuthority("ADMIN") // 仅ADMIN角色可以访问
                 .antMatchers("/user-to-room/**",
                         "/user-to-group/**", "/send", "/get-messages",
                         "/room/find-all-rooms", "/groups/find-all-groups", "/user/update-password",
@@ -68,30 +108,31 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // 允许所有源
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 允许的方法
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token")); // 允许的请求头
-        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8090")); // 允许的前端地址
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true); // 允许凭证
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // 对所有API生效
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-}
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
+    }
 
-// @Bean
-// public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)
-// throws Exception {
-// return httpSecurity
-// .authorizeRequests(registry -> registry
-// .antMatchers("/swagger-ui/**").permitAll()
-// .antMatchers("/user/login").permitAll()
-// .antMatchers("/user/**").hasAnyAuthority("Champion", "Boss")
-// .anyRequest().authenticated())
-// .csrf().disable()
-// .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-// .and()
-// .formLogin()
-// .and()
-// .build();
-// }
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowSemicolon(true);
+        return firewall;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
+    }
+
+}
