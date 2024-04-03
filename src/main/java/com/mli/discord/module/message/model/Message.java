@@ -31,7 +31,8 @@ public class Message {
     public enum ChatType {
         TEXT,
         JOIN,
-        LEAVE
+        LEAVE, 
+        USER_LIST
     }
 
     public Message() {

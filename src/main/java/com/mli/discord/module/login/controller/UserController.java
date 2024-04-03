@@ -18,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mli.discord.module.login.dao.UserRepository;
 import com.mli.discord.module.login.dto.LoginDTO;
+import com.mli.discord.module.login.dto.RegisterDTO;
 import com.mli.discord.module.login.dto.UserIdDTO;
+import com.mli.discord.module.login.dto.UsernameDTO;
 import com.mli.discord.module.login.model.User;
 import com.mli.discord.module.login.service.UserService;
 
@@ -126,8 +130,9 @@ public class UserController {
      * @return ResponseEntity 包含註冊成功或失敗訊息的回應實體
      */
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody LoginDTO loginDTO) {
-        int result = userRepository.createUser(loginDTO.getUsername(), loginDTO.getPassword());
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO) {
+        int result = userRepository.createUser(registerDTO.getUsername(), registerDTO.getPassword(),
+                registerDTO.getBirthday(), registerDTO.getInterests());
 
         if (result == 1) {
             return ResponseEntity.ok("使用者成功註冊");
@@ -168,4 +173,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active session");
     }
 
+    /**
+     * 根据用户名查找用户
+     *
+     * @param username 用户名
+     * @return 查找到的用户信息，如果未找到则返回404状态码
+     */
+    @PostMapping("/find-by-username")
+    @Operation(summary = "根据用户名查找用户")
+    public ResponseEntity<?> findByUsername(@RequestBody UsernameDTO usernameDTO) {
+        User user = userService.findByUsername(usernameDTO.getUsername());
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

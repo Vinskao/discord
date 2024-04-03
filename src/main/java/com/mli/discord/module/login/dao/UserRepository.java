@@ -1,5 +1,7 @@
 package com.mli.discord.module.login.dao;
 
+import java.time.LocalDateTime;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,23 +44,30 @@ public class UserRepository {
      */
     @PostConstruct
     private void init() {
-        if (userDAO.findById(1).isEmpty() && userDAO.findById(2).isEmpty() &&
-                userDAO.findById(3).isEmpty()) {
-            // 這裡寫死了三個使用者，密碼分別是 password1 - 3
-            User user1 = new User(1, "password1", "chiaki@mli.com",
-                    Authority.ADMIN.toString());
-            User user2 = new User(2, "password2", "min@mli.com",
-                    Authority.NORMAL.toString());
-            User user3 = new User(3, "password3", "alice@mli.com",
-                    Authority.NORMAL.toString());
+        // 定义要初始化的用户信息
+        LocalDateTime randomBirthday1 = LocalDateTime.of(1990, 5, 24, 12, 0);
+        LocalDateTime randomBirthday2 = LocalDateTime.of(1992, 8, 15, 12, 0);
+        LocalDateTime randomBirthday3 = LocalDateTime.of(1985, 3, 9, 12, 0);
+        String interests1 = "閱讀";
+        String interests2 = "游泳";
+        String interests3 = "旅行";
 
-            // 對密碼進行加密
-            encodePasswords(user1, user2, user3);
+        // 检查数据库中是否已存在这些用户名，如果不存在，则创建新用户
+        checkAndCreateUser("chiaki@mli.com", "password1", Authority.ADMIN.toString(), randomBirthday1, interests1);
+        checkAndCreateUser("min@mli.com", "password2", Authority.NORMAL.toString(), randomBirthday2, interests2);
+        checkAndCreateUser("alice@mli.com", "password3", Authority.NORMAL.toString(), randomBirthday3, interests3);
+    }
 
-            // 將使用者存入資料庫
-            userDAO.insertUser(user1);
-            userDAO.insertUser(user2);
-            userDAO.insertUser(user3);
+    private void checkAndCreateUser(String username, String password, String authority, LocalDateTime birthday,
+            String interests) {
+        // 检查数据库中是否已存在该用户名
+        User existingUser = userDAO.findByUsername(username);
+
+        // 如果用户不存在，则创建新用户并加密密码
+        if (existingUser == null) {
+            User newUser = new User(password, username, authority, birthday, interests);
+            encodePasswords(newUser);
+            userDAO.insertUser(newUser);
         }
     }
 
@@ -82,9 +91,9 @@ public class UserRepository {
         return userDAO.findById(userId).get(0);
     }
 
-    public Integer createUser(String username, String password) {
+    public Integer createUser(String username, String password, LocalDateTime birthday, String interests) {
         // 创建一个新的 User 对象
-        User newUser = new User(password, username, Authority.NORMAL.toString());
+        User newUser = new User(password, username, Authority.NORMAL.toString(), birthday, interests);
 
         // 对用户密码进行加密
         encodePasswords(newUser);

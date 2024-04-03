@@ -1,9 +1,9 @@
 package com.mli.discord.module.login.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.util.Objects;
-import lombok.Builder;
-import lombok.Data;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 用户
@@ -11,8 +11,6 @@ import lombok.Data;
  * @version 1.0
  * @author D3031104
  */
-@Data
-@Builder
 @Schema(description = "用戶")
 public class User {
     /** 用户ID */
@@ -27,21 +25,31 @@ public class User {
     /** 用户权限 */
     @Schema(description = "用戶權限")
     private String authority;
+    @Schema(description = "用户生日")
+    private LocalDateTime birthday;
+    @Schema(description = "用户兴趣")
+    private String interests;
 
     public User() {
     }
 
-    public User(String password, String username, String authority) {
-        this.password = password;
-        this.username = username;
-        this.authority = authority;
-    }
-
-    public User(Integer id, String password, String username, String authority) {
+    public User(Integer id, String password, String username, String authority, LocalDateTime birthday,
+            String interests) {
         this.id = id;
         this.password = password;
         this.username = username;
         this.authority = authority;
+        this.birthday = birthday;
+        this.interests = interests;
+    }
+
+    public User(String password, String username, String authority, LocalDateTime birthday,
+            String interests) {
+        this.password = password;
+        this.username = username;
+        this.authority = authority;
+        this.birthday = birthday;
+        this.interests = interests;
     }
 
     public Integer getId() {
@@ -76,6 +84,22 @@ public class User {
         this.authority = authority;
     }
 
+    public LocalDateTime getBirthday() {
+        return this.birthday;
+    }
+
+    public void setBirthday(LocalDateTime birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getInterests() {
+        return this.interests;
+    }
+
+    public void setInterests(String interests) {
+        this.interests = interests;
+    }
+
     public User id(Integer id) {
         setId(id);
         return this;
@@ -96,6 +120,16 @@ public class User {
         return this;
     }
 
+    public User birthday(LocalDateTime birthday) {
+        setBirthday(birthday);
+        return this;
+    }
+
+    public User interests(String interests) {
+        setInterests(interests);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -105,12 +139,13 @@ public class User {
         }
         User user = (User) o;
         return Objects.equals(id, user.id) && Objects.equals(password, user.password)
-                && Objects.equals(username, user.username) && Objects.equals(authority, user.authority);
+                && Objects.equals(username, user.username) && Objects.equals(authority, user.authority)
+                && Objects.equals(birthday, user.birthday) && Objects.equals(interests, user.interests);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, password, username, authority);
+        return Objects.hash(id, password, username, authority, birthday, interests);
     }
 
     @Override
@@ -120,6 +155,8 @@ public class User {
                 ", password='" + getPassword() + "'" +
                 ", username='" + getUsername() + "'" +
                 ", authority='" + getAuthority() + "'" +
+                ", birthday='" + getBirthday() + "'" +
+                ", interests='" + getInterests() + "'" +
                 "}";
     }
 

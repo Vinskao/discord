@@ -122,4 +122,15 @@ public class UserService implements UserDetailsService {
             return false;
         }
     }
+
+    /**
+     * 根据用户名查找用户
+     *
+     * @param username 用户名
+     * @return 查找到的用户，如果未找到则返回 null
+     */
+    public User findByUsername(String username) {
+        logger.info("Searching for user by username: {}", username);
+        return userDAO.findByUsername(username);
+    }
 }

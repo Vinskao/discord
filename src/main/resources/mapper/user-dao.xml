@@ -10,11 +10,14 @@
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="authority" column="authority"/>
+        <result property="birthday" column="birthday"/>
+        <result property="interests" column="interests"/>
+
     </resultMap>
 
     <insert id="insertUser" parameterType="com.mli.discord.module.login.model.User">
-        INSERT INTO users (username, password, authority)
-        VALUES (#{username}, #{password}, #{authority});
+        INSERT INTO users (username, password, authority, birthday, interests)
+        VALUES (#{username}, #{password}, #{authority}, #{birthday}, #{interests});
     </insert>
 
     <select id="findAll" resultMap="userResultMap">

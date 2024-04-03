@@ -1,3 +1,4 @@
+drop table security_questions
 drop table users
 drop table messages
 drop table user_to_group
@@ -13,14 +14,16 @@ select * from room
 select * from [group]
 
 DELETE FROM user_to_room;
+DELETE FROM user_to_group;
 
 CREATE TABLE users (
     id INT IDENTITY(1,1),
     username NVARCHAR(50) PRIMARY KEY NOT NULL,
     password NVARCHAR(255) NOT NULL,
-    authority NVARCHAR(50) NOT NULL
+    authority NVARCHAR(50) NOT NULL,
+    birthday DATE,
+    interests NVARCHAR(MAX)
 );
-
 
 CREATE TABLE [group] (
     id INT PRIMARY KEY IDENTITY(1,1),

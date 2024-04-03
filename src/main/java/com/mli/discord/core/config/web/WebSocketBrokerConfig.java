@@ -1,22 +1,40 @@
 package com.mli.discord.core.config.web;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.messaging.SessionConnectEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.mli.discord.core.Interceptor.CustomHttpSessionHandshakeInterceptor;
+import com.mli.discord.module.message.model.Message;
+
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, ApplicationContextAware {
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketBrokerConfig.class);
+
+    private Set<String> connectedUsernames = ConcurrentHashMap.newKeySet();
+    private ApplicationContext applicationContext;
+    // private Map<String, Set<String>> roomUsernamesMap = new
+    // ConcurrentHashMap<>();
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -26,31 +44,131 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
                 .setInterceptors(new CustomHttpSessionHandshakeInterceptor());
     }
 
-    // @Override
-    // public void configureMessageBroker(MessageBrokerRegistry config) {
-    // config.enableSimpleBroker("/topic");
-    // config.setApplicationDestinationPrefixes("/app");
-    // }
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic"); // Use /topic/message/ as the broker prefix
+        config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
-    
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @EventListener
+    public void handleSessionConnected(SessionConnectEvent event) {
+        String username = event.getUser().getName();
+        connectedUsernames.add(username);
+        logger.info("{} connected", username);
+        broadcastUpdatedUserList();
+    }
+
+    // @EventListener
+    // public void handleSessionConnected(SessionConnectEvent event) {
+    // StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+    // String username = sha.getUser().getName();
+    // Object roomIdObj = sha.getSessionAttributes().get("roomId");
+    //
+    // // 检查 roomId 是否存在
+    // if (roomIdObj == null) {
+    // logger.error("Room ID is null for user: {}", username);
+    // return; // 直接返回，不执行后续操作
+    // }
+    //
+    // String roomId = roomIdObj.toString();
+    // // 现在 roomId 确认不为 null，可以继续使用
+    // roomUsernamesMap.computeIfAbsent(roomId, k ->
+    // ConcurrentHashMap.newKeySet()).add(username);
+    // logger.info("{} connected to room {}", username, roomId);
+    // broadcastUpdatedUserList(roomId);
+    // }
+    @EventListener
+    public void handleSessionDisconnect(SessionDisconnectEvent event) {
+        String username = event.getUser().getName();
+        connectedUsernames.remove(username);
+        logger.info("{} disconnected", username);
+        broadcastUpdatedUserList();
+    }
+    //
+    // @EventListener
+    // public void handleSessionDisconnect(SessionDisconnectEvent event) {
+    // StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+    // String username = sha.getUser().getName();
+    // String roomId = sha.getSessionAttributes().get("roomId").toString(); // 同样，假设
+    // roomId 已经存储在会话属性中
+    //
+    // Set<String> usernamesInRoom = roomUsernamesMap.getOrDefault(roomId,
+    // ConcurrentHashMap.newKeySet());
+    // usernamesInRoom.remove(username);
+    // if (usernamesInRoom.isEmpty()) {
+    // roomUsernamesMap.remove(roomId);
+    // }
+    //
+    // logger.info("{} disconnected from room {}", username, roomId);
+    //
+    // broadcastUpdatedUserList(roomId);
+    // }
+
+    private void broadcastUpdatedUserList() {
+        SimpMessagingTemplate template = applicationContext.getBean(SimpMessagingTemplate.class);
+        if (template != null) {
+            // 创建一个新的消息对象，设置为 USER_LIST 类型
+            Message userListMessage = new Message();
+            userListMessage.setType(Message.ChatType.USER_LIST); // 设置消息类型为 USER_LIST
+            userListMessage.setMessage(String.join(",", connectedUsernames)); // 用户名列表转换为字符串
+
+            logger.info("Broadcasting connected usernames: {}", connectedUsernames);
+            // 使用模板发送消息，注意这里发送的是 userListMessage 对象
+            template.convertAndSend("/topic/message", userListMessage);
+        }
+    }
+
+    // private void broadcastUpdatedUserList(String roomId) {
+    // Set<String> usernamesInRoom = roomUsernamesMap.getOrDefault(roomId,
+    // ConcurrentHashMap.newKeySet());
+    //
+    // SimpMessagingTemplate template =
+    // applicationContext.getBean(SimpMessagingTemplate.class);
+    // if (template != null) {
+    // logger.info("Broadcasting connected usernames in room {}: {}", roomId,
+    // usernamesInRoom);
+    // template.convertAndSend("/topic/userList/" + roomId, usernamesInRoom);
+    // logger.info("Broadcasted in room {}: {}", roomId, usernamesInRoom);
+    //
+    // }
+    // }
+    // 在 STOMP 连接建立时读取 STOMP 帧的 headers，并把相关信息保存到会话属性中
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new ChannelInterceptor() {
             @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                    MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                if (StompCommand.SUBSCRIBE.equals(accessor.getCommand()) || StompCommand.UNSUBSCRIBE.equals(accessor.getCommand())) {
-                    String destination = accessor.getDestination();
-                    System.out.println(accessor.getCommand() + " to: " + destination);
+            public org.springframework.messaging.Message<?> preSend(org.springframework.messaging.Message<?> message,
+                    MessageChannel channel) {
+                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                    String roomId = accessor.getFirstNativeHeader("roomId");
+                    if (roomId != null) {
+                        accessor.getSessionAttributes().put("roomId", roomId);
+                    }
                 }
                 return message;
             }
         });
     }
+    // @Override
+    // public void configureClientInboundChannel(ChannelRegistration registration) {
+    // registration.interceptors(new ChannelInterceptor() {
+    // @Override
+    // public Message<?> preSend(Message<?> message, MessageChannel channel) {
+    // StompHeaderAccessor accessor =
+    // MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+    // if (StompCommand.SUBSCRIBE.equals(accessor.getCommand()) ||
+    // StompCommand.UNSUBSCRIBE.equals(accessor.getCommand())) {
+    // String destination = accessor.getDestination();
+    // System.out.println(accessor.getCommand() + " to: " + destination);
+    // }
+    // return message;
+    // }
+    // });
+    // }
 }
