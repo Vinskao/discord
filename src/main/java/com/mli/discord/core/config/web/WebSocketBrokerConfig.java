@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -40,6 +42,12 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, 
     private ApplicationContext applicationContext;
     // private Map<String, Set<String>> roomUsernamesMap = new
     // ConcurrentHashMap<>();
+    
+    @MessageMapping("/get-online-users")
+    @SendTo("/topic/online-users")
+    public Set<String> getOnlineUsers() {
+        return connectedUsernames;
+    }
     
     /**
      * 註冊STOMP端點。
