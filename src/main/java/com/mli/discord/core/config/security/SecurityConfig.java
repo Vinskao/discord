@@ -30,18 +30,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.mli.discord.module.login.service.UserService;
 
 /**
- * 
+ * 安全配置類，定義了應用的安全性設置。
  * @Author D3031104
  * @version 1.0
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    // prevent circular dependency
+    // 避免循環依賴
     @Autowired
     @Lazy
     private UserService userService;
-
+    
+    /**
+     * 身份驗證提供者的Bean定義。
+     * 
+     * @return 身份驗證提供者
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -49,7 +54,14 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-
+    
+    /**
+     * 安全過濾器鏈配置。
+     * 
+     * @param httpSecurity Http安全配置
+     * @return 安全過濾器鏈
+     * @throws Exception 配置過程中可能發生的異常
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -72,7 +84,6 @@ public class SecurityConfig {
                     response.setStatus(HttpServletResponse.SC_OK);
                 })
                 .failureHandler((request, response, exception) -> {
-                    // Handle login failure
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("Login failed: " + exception.getMessage());
                 })
@@ -80,9 +91,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
 
-                // .sessionManagement()
-                // .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                // .and()
+
                 .authorizeRequests()
                 .antMatchers("/user/check-session", "/user/logout", "/user/login",
                         "/user/find-by-id", "/user/register", "/user/me")
@@ -99,12 +108,23 @@ public class SecurityConfig {
                 .httpBasic(); // 使用HTTP Basic认证
         return httpSecurity.build();
     }
-
+    
+    /**
+     * 密碼編碼器的Bean定義。
+     * 
+     * @return 密碼編碼器
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    
+    
+    /**
+     * CORS配置源的Bean定義。
+     * 
+     * @return CORS配置源
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -117,19 +137,39 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+    
+    
+    /**
+     * 身份驗證管理器的Bean定義。
+     * 
+     * @param http Http安全配置
+     * @return 身份驗證管理器
+     * @throws Exception 配置過程中可能發生的異常
+     */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
-
+    
+    
+    /**
+     * HTTP防火牆配置的Bean定義。
+     * 
+     * @return HTTP防火牆
+     */
     @Bean
     public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
         StrictHttpFirewall firewall = new StrictHttpFirewall();
         firewall.setAllowSemicolon(true);
         return firewall;
     }
-
+    
+    
+    /**
+     * Web安全自定義配置的Bean定義。
+     * 
+     * @return Web安全自定義配置
+     */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.httpFirewall(allowUrlEncodedSlashHttpFirewall());

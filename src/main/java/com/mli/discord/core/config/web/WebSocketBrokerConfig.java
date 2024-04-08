@@ -25,7 +25,12 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.mli.discord.core.Interceptor.CustomHttpSessionHandshakeInterceptor;
 import com.mli.discord.module.message.model.Message;
-
+/**
+ * WebSocket消息傳遞配置，提供了基於WebSocket的STOMP消息傳遞功能的配置。
+ *
+ * @Author D3031104
+ * @version 1.0
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, ApplicationContextAware {
@@ -35,7 +40,12 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, 
     private ApplicationContext applicationContext;
     // private Map<String, Set<String>> roomUsernamesMap = new
     // ConcurrentHashMap<>();
-
+    
+    /**
+     * 註冊STOMP端點。
+     *
+     * @param registry STOMP端點註冊器
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-message")
@@ -43,18 +53,32 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, 
                 .withSockJS()
                 .setInterceptors(new CustomHttpSessionHandshakeInterceptor());
     }
-
+    /**
+     * 配置消息代理。
+     *
+     * @param config 消息代理註冊器
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
 
+    /**
+     * 設置應用程式上下文。
+     *
+     * @param applicationContext Spring應用程式上下文
+     * @throws BeansException 如果設置上下文時發生錯誤
+     */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-
+    /**
+     * 處理會話連接事件。
+     *
+     * @param event 會話連接事件
+     */
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
         String username = event.getUser().getName();
@@ -82,6 +106,12 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, 
     // logger.info("{} connected to room {}", username, roomId);
     // broadcastUpdatedUserList(roomId);
     // }
+    
+    /**
+     * 處理會話斷開事件。
+     *
+     * @param event 會話斷開事件
+     */
     @EventListener
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
         String username = event.getUser().getName();
@@ -109,6 +139,9 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, 
     // broadcastUpdatedUserList(roomId);
     // }
 
+    /**
+     * 廣播更新後的用戶列表。
+     */
     private void broadcastUpdatedUserList() {
         SimpMessagingTemplate template = applicationContext.getBean(SimpMessagingTemplate.class);
         if (template != null) {
@@ -137,7 +170,12 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer, 
     //
     // }
     // }
-    // 在 STOMP 连接建立时读取 STOMP 帧的 headers，并把相关信息保存到会话属性中
+    
+    /**
+     * 在STOMP連接建立時，讀取STOMP幀的headers，並將相關信息保存到會話屬性中。
+     *
+     * @param registration 頻道註冊器
+     */
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new ChannelInterceptor() {
