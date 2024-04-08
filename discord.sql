@@ -14,9 +14,11 @@ select * from user_to_room
 select * from room
 select * from [group]
 
+DELETE FROM messages;
 DELETE FROM user_to_room;
 DELETE FROM user_to_group;
 DELETE FROM security_questions;
+
 
 CREATE TABLE users (
     id INT IDENTITY(1,1),
@@ -68,7 +70,7 @@ CREATE TABLE messages (
 );
 CREATE TABLE security_questions (
     id INT PRIMARY KEY IDENTITY(1,1),
-    username NVARCHAR(50),
+    username NVARCHAR(50) UNIQUE,
     question NVARCHAR(MAX),
     answer NVARCHAR(MAX),
     FOREIGN KEY (username) REFERENCES users(username)

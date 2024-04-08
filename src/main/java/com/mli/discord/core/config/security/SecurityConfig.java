@@ -94,13 +94,13 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                 .antMatchers("/user/check-session", "/user/logout", "/user/login",
-                        "/user/find-by-id", "/user/register", "/user/me")
+                        "/user/find-by-id", "/user/register", "/user/me","/get-question","/verify-answer","/user/update-password")
                 // .antMatchers("/**")
                 .permitAll()
                 .antMatchers("/export-chat-history").hasAuthority("ADMIN") // 仅ADMIN角色可以访问
                 .antMatchers("/user-to-room/**",
                         "/user-to-group/**", "/send", "/get-messages",
-                        "/room/find-all-rooms", "/groups/find-all-groups", "/user/update-password",
+                        "/room/find-all-rooms", "/groups/find-all-groups",
                         "/modify-security-question", "/add-security-question", "/user/update-user-details")
                 .hasAnyAuthority("ADMIN", "NORMAL") // ADMIN和NORMAL角色都可以访问
                 .anyRequest().authenticated() // 所有其他请求都需要认证
