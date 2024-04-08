@@ -14,14 +14,16 @@ import com.mli.discord.module.login.model.SecurityQuestion;
 import com.mli.discord.module.login.service.SecurityQuestionService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * 安全問題控制器類，處理與安全問題相關的 HTTP 請求。
+ * 處理安全問題相關HTTP請求的控制器。
  * 
  * @version 1.0
  * @author D3031104
  */
 @RestController
+@Tag(name = "SecurityQuestionController", description = "安全問題控制器")
 public class SecurityQuestionController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -76,6 +78,12 @@ public class SecurityQuestionController {
         }
     }
 
+    /**
+     * 通過用戶名獲取安全問題
+     * 
+     * @param usernameDTO 用戶名DTO
+     * @return ResponseEntity 包含安全問題的響應實體
+     */
     @Operation(summary = "獲取安全問題")
     @PostMapping("/get-question")
     public ResponseEntity<String> getQuestionByUsername(@RequestBody UsernameDTO usernameDTO) {
@@ -87,6 +95,12 @@ public class SecurityQuestionController {
         }
     }
 
+    /**
+     * 驗證安全問題答案
+     * 
+     * @param securityQuestion 安全問題實體對象，包含要驗證的答案
+     * @return ResponseEntity 包含驗證結果的響應實體
+     */
     @Operation(summary = "驗證安全問題答案")
     @PostMapping("/verify-answer")
     public ResponseEntity<Boolean> verifyAnswer(@RequestBody SecurityQuestion securityQuestion) {

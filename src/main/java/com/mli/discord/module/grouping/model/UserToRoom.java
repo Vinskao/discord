@@ -2,6 +2,7 @@ package com.mli.discord.module.grouping.model;
 
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -10,8 +11,8 @@ import lombok.Data;
  * @Author D3031104
  * @version 1.0
  */
-
 @Data
+@Schema(description = "用戶與房間關聯實體")
 public class UserToRoom {
     private String username;
     private int roomId;

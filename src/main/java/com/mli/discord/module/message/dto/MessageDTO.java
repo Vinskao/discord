@@ -1,12 +1,14 @@
 package com.mli.discord.module.message.dto;
 
+import java.util.Objects;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import com.mli.discord.module.message.model.Message.ChatType;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import java.util.Objects;
 
 /**
  * 
@@ -16,6 +18,7 @@ import java.util.Objects;
 @Data
 @MessageMapping("/message")
 @SendTo("/topic/message")
+@Schema(description = "WebSocket 訊息的數據傳輸對象")
 public class MessageDTO {
     private String message;
     private String username;

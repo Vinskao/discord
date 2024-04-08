@@ -3,13 +3,15 @@ package com.mli.discord.module.grouping.model;
 import lombok.Data;
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
- * 
+ * 房間實體。
  * 
  * @Author D3031104
  * @version 1.0
  */
-
+@Schema(description = "房間實體")
 @Data
 public class Room {
 	private int id;

@@ -1,29 +1,31 @@
 package com.mli.discord.module.login.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
+ * DTO for updating user details like birthday and interests.
  * 
- * @Author D3031104
  * @version 1.0
- *          註冊請求DTO
+ * @author D3031104
  */
-@Schema(description = "註冊請求DTO")
-public class RegisterDTO {
+@Schema(description = "Update User Details")
+public class UpdateUserDetailsDTO {
+
+    @Schema(description = "username")
     private String username;
-    private String password;
+    @Schema(description = "用户生日", example = "1990-01-01T00:00:00")
     private LocalDateTime birthday;
+
+    @Schema(description = "用户兴趣", example = "阅读, 旅游")
     private String interests;
 
-    public RegisterDTO() {
+    public UpdateUserDetailsDTO() {
     }
 
-    public RegisterDTO(String username, String password, LocalDateTime birthday, String interests) {
+    public UpdateUserDetailsDTO(String username, LocalDateTime birthday, String interests) {
         this.username = username;
-        this.password = password;
         this.birthday = birthday;
         this.interests = interests;
     }
@@ -34,14 +36,6 @@ public class RegisterDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public LocalDateTime getBirthday() {
@@ -60,22 +54,17 @@ public class RegisterDTO {
         this.interests = interests;
     }
 
-    public RegisterDTO username(String username) {
+    public UpdateUserDetailsDTO username(String username) {
         setUsername(username);
         return this;
     }
 
-    public RegisterDTO password(String password) {
-        setPassword(password);
-        return this;
-    }
-
-    public RegisterDTO birthday(LocalDateTime birthday) {
+    public UpdateUserDetailsDTO birthday(LocalDateTime birthday) {
         setBirthday(birthday);
         return this;
     }
 
-    public RegisterDTO interests(String interests) {
+    public UpdateUserDetailsDTO interests(String interests) {
         setInterests(interests);
         return this;
     }
@@ -84,24 +73,24 @@ public class RegisterDTO {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof RegisterDTO)) {
+        if (!(o instanceof UpdateUserDetailsDTO)) {
             return false;
         }
-        RegisterDTO registerDTO = (RegisterDTO) o;
-        return Objects.equals(username, registerDTO.username) && Objects.equals(password, registerDTO.password)
-                && Objects.equals(birthday, registerDTO.birthday) && Objects.equals(interests, registerDTO.interests);
+        UpdateUserDetailsDTO updateUserDetailsDTO = (UpdateUserDetailsDTO) o;
+        return Objects.equals(username, updateUserDetailsDTO.username)
+                && Objects.equals(birthday, updateUserDetailsDTO.birthday)
+                && Objects.equals(interests, updateUserDetailsDTO.interests);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, birthday, interests);
+        return Objects.hash(username, birthday, interests);
     }
 
     @Override
     public String toString() {
         return "{" +
                 " username='" + getUsername() + "'" +
-                ", password='" + getPassword() + "'" +
                 ", birthday='" + getBirthday() + "'" +
                 ", interests='" + getInterests() + "'" +
                 "}";

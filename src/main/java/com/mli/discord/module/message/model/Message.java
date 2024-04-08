@@ -1,9 +1,10 @@
 package com.mli.discord.module.message.model;
 
 import java.time.LocalDateTime;
-
-import lombok.Data;
 import java.util.Objects;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 /**
  * 傳輸的訊息
@@ -12,9 +13,8 @@ import java.util.Objects;
  * @Author D3031104
  * @version 1.0
  */
-
+@Schema(description = "傳輸的訊息")
 @Data
-
 public class Message {
     private Integer id;
     private Integer roomId;
@@ -31,7 +31,7 @@ public class Message {
     public enum ChatType {
         TEXT,
         JOIN,
-        LEAVE, 
+        LEAVE,
         USER_LIST
     }
 

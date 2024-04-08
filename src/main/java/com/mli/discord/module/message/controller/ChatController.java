@@ -22,7 +22,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,13 +31,16 @@ import com.mli.discord.module.message.dto.RoomIdDTO;
 import com.mli.discord.module.message.model.Message;
 import com.mli.discord.module.message.service.MessageService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * @Author D3031104
  * @Version 1.0
  *          接收Client送來的WebSocket訊息及推送給前端的訊息
  */
-
 @RestController
+@Tag(name = "Chat Controller", description = "接收Client送來的WebSocket訊息及推送給前端的訊息")
 public class ChatController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -54,6 +56,7 @@ public class ChatController {
 	 * @param textMessageDTO 待發送的消息
 	 * @return ResponseEntity<Void>
 	 */
+	@Operation(summary = "發送消息給 WebSocket 客戶端")
 	@PostMapping("/send")
 	public ResponseEntity<Void> sendMessage(@RequestBody MessageDTO textMessageDTO) {
 
@@ -74,6 +77,7 @@ public class ChatController {
 	 * 
 	 * @param textMessageDTO 接收到的消息
 	 */
+	@Operation(summary = "接收 WebSocket 客戶端發送的消息")
 	@MessageMapping("/sendMessage")
 	public void receiveMessage(@Payload MessageDTO messageDTO) {
 		logger.info("Received STOMP message: {} from user: {} in room: {}", messageDTO.getMessage(),
@@ -108,6 +112,7 @@ public class ChatController {
 	 * @param messageDTO 待廣播的消息
 	 * @return MessageDTO
 	 */
+	@Operation(summary = "將消息廣播給 WebSocket 客戶端")
 	@SendTo("/topic/message")
 	public MessageDTO broadcastMessage(@Payload MessageDTO textMessageDTO) {
 		// 日誌記錄，以便於調試和監控
@@ -124,6 +129,7 @@ public class ChatController {
 	 * @param messageDTO     接收到的消息
 	 * @param headerAccessor 消息頭訪問器
 	 */
+	@Operation(summary = "處理從前端 STOMP 客戶端發送到 /app/message 的消息")
 	@MessageMapping("/message")
 	public void receiveAndBroadcastMessage(@Payload MessageDTO textMessageDTO,
 			SimpMessageHeaderAccessor headerAccessor) {
@@ -155,11 +161,19 @@ public class ChatController {
 	 * @return ResponseEntity<List<Message>> 消息列表
 	 */
 	@PostMapping("/get-messages")
+	@Operation(summary = "根據房間ID獲取消息")
 	public ResponseEntity<List<Message>> getMessagesByRoomId(@RequestBody RoomIdDTO roomIdDTO) {
 		List<Message> messages = messageService.getMessagesByRoomId(roomIdDTO.getRoomId());
 		return ResponseEntity.ok(messages);
 	}
 
+	/**
+	 * 導出聊天歷史記錄為Excel文件。
+	 * 
+	 * @param roomIdDTO 房間IDDTO
+	 * @return ResponseEntity<byte[]> 包含Excel文件的響應實體
+	 */
+	@Operation(summary = "導出聊天歷史記錄為Excel文件")
 	@PostMapping("/export-chat-history")
 	public ResponseEntity<byte[]> exportChatHistory(@RequestBody RoomIdDTO roomIdDTO) {
 		logger.info("Exporting chat history for room ID: {}", roomIdDTO.getRoomId());

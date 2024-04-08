@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @version 1.0
  * @author D3031104
  */
-
 @Schema(description = "安全問題")
 public class SecurityQuestion {
     @Schema(hidden = true)

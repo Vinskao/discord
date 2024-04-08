@@ -2,11 +2,14 @@ package com.mli.discord.module.login.model;
 
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * 
  * @Author D3031104
  * @version 1.0
  */
+@Schema(description = "登錄響應")
 public class LoginResponse {
     private String accessToken;
     private String refreshToken;

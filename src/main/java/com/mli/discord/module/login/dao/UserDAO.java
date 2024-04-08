@@ -1,5 +1,6 @@
 package com.mli.discord.module.login.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mli.discord.module.login.model.User;
@@ -60,5 +61,16 @@ public interface UserDAO {
     User findByUsername(String username);
 
     Integer updatePasswordByUsername(@Param("username") String username, @Param("password") String newPassword);
+
+    /**
+     * 根据用户名更新用户的生日和兴趣。
+     * 
+     * @param username  用户名
+     * @param birthday  新的生日
+     * @param interests 新的兴趣
+     * @return 更新的记录数
+     */
+    Integer updateUserDetailsByUsername(@Param("username") String username, @Param("birthday") LocalDateTime birthday,
+            @Param("interests") String interests);
 
 }

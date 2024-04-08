@@ -2,11 +2,14 @@ package com.mli.discord.module.message.dto;
 
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * 
  * @Author D3031104
  * @version 1.0
  */
+@Schema(description = "房間ID的數據傳輸對象")
 public class RoomIdDTO {
     private Integer roomId;
 

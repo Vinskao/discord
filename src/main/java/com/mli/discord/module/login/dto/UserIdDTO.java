@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @version 1.0
  * @author D3031104
  */
-@Schema(description = "用戶")
+@Schema(description = "用戶id")
 public class UserIdDTO {
     /** 使用者ID */
     @Schema(description = "用戶ID", name = "id")

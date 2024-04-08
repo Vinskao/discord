@@ -2,7 +2,17 @@ package com.mli.discord.module.grouping.dto;
 
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+/**
+ * 房間 ID DTO。
+ * 
+ * @author D3031104
+ * @version 1.0
+ */
+@Schema(description = "房間 ID DTO")
 public class RoomIdDTO {
+    @Schema(description = "房間 ID")
     private Integer roomId;
 
     public RoomIdDTO() {

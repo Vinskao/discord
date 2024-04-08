@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .antMatchers("/user-to-room/**",
                         "/user-to-group/**", "/send", "/get-messages",
                         "/room/find-all-rooms", "/groups/find-all-groups", "/user/update-password",
-                        "/modify-security-question", "/add-security-question")
+                        "/modify-security-question", "/add-security-question", "/user/update-user-details")
                 .hasAnyAuthority("ADMIN", "NORMAL") // ADMIN和NORMAL角色都可以访问
                 .anyRequest().authenticated() // 所有其他请求都需要认证
                 .and()

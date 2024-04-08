@@ -1,6 +1,16 @@
 package com.mli.discord.module.grouping.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+/**
+ * 這是用於表示群組 ID 的資料傳輸物件。
+ *
+ * @author D3031104
+ * @version 1.0
+ */
+@Schema(description = "這是表示群組 ID 的資料傳輸物件")
 public class GroupIdDTO {
+    @Schema(description = "群組 ID")
     private int groupId;
 
     public GroupIdDTO() {

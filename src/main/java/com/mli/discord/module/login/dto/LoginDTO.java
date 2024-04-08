@@ -5,10 +5,11 @@ import java.util.Objects;
 
 /**
  * 
- * @version 1.0
- * @author D3031104
+ * @Author D3031104
+ * @Version 1.0
+ *          登錄請求DTO
  */
-@Schema
+@Schema(description = "登錄請求DTO")
 public class LoginDTO {
     @Schema(description = "The User's username")
     private String username;

@@ -3,9 +3,9 @@ spring:
     name: discord
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://172.27.36.106:1433;databaseName=discord;trustServerCertificate=true
-    # url: jdbc:sqlserver://localhost:1433;databaseName=discord;trustServerCertificate=true
-    username: discord
+    # url: jdbc:sqlserver://172.27.36.106:1433;databaseName=discord;trustServerCertificate=true
+    url: jdbc:sqlserver://localhost:1433;databaseName=discord;trustServerCertificate=true
+    username: SA
     password: Wawi247525=
   devtools:
     restart:
@@ -13,10 +13,9 @@ spring:
   security:
     user:
       password: wawi247525
-  
+
 #logging:
 #  level.org.springframework.security: DEBUG
-
 
 springdoc:
   api-docs:

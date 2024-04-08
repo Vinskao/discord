@@ -1,9 +1,18 @@
 package com.mli.discord.module.grouping.model;
 
-import lombok.Data;
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+/**
+ * 用戶與群組關聯實體。
+ * 
+ * @Author D3031104
+ * @version 1.0
+ */
 @Data
+@Schema(description = "用戶與群組關聯實體")
 public class UserToGroup {
     private String username;
     private int groupId;

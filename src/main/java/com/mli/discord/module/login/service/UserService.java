@@ -1,5 +1,6 @@
 package com.mli.discord.module.login.service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -133,4 +134,22 @@ public class UserService implements UserDetailsService {
         logger.info("Searching for user by username: {}", username);
         return userDAO.findByUsername(username);
     }
+
+    public boolean updateUserDetails(String username, LocalDateTime birthday, String interests) {
+        logger.info("Service layer, updating user details for: {}", username);
+        try {
+            int updateCount = userDAO.updateUserDetailsByUsername(username, birthday, interests);
+            if (updateCount > 0) {
+                logger.info("User details updated successfully");
+                return true;
+            } else {
+                logger.warn("No user found with username: {}", username);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Exception occurred while updating user details: {}", e.getMessage());
+            return false;
+        }
+    }
+
 }

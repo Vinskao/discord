@@ -20,6 +20,15 @@
     <select id="existsByUsernameAndRoomId" parameterType="map" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM user_to_room WHERE username = #{username} AND room_id = #{roomId}
     </select>
+    <select id="selectRoomsByUsername" parameterType="string" resultMap="UserToRoomResultMap">
+        SELECT * FROM user_to_room WHERE username = #{username}
+    </select>
+
+    <delete id="deleteAllUserEntriesByUsername" parameterType="string">
+        DELETE FROM user_to_room WHERE username = #{username}
+    </delete>
+    
+    
     
 
 </mapper>

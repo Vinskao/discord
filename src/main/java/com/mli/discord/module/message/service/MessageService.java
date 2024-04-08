@@ -10,6 +10,8 @@ import com.mli.discord.module.message.dao.MessageDAO;
 import com.mli.discord.module.message.dto.MessageDTO;
 import com.mli.discord.module.message.model.Message;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 /**
  * 
  * @Author D3031104
@@ -20,6 +22,13 @@ public class MessageService {
     @Autowired
     private MessageDAO messageDAO;
 
+    /**
+     * 保存訊息
+     * 
+     * @param messageDTO 待保存的訊息DTO
+     * @return Message 已保存的訊息
+     */
+    @Operation(summary = "保存訊息")
     public Message saveMessage(MessageDTO messageDTO) {
         Message message = new Message();
         message.setRoomId(messageDTO.getRoomId());
@@ -32,6 +41,13 @@ public class MessageService {
         return message;
     }
 
+    /**
+     * 根據房間ID獲取消息列表
+     * 
+     * @param roomId 房間ID
+     * @return List<Message> 訊息列表
+     */
+    @Operation(summary = "根據房間ID獲取消息列表")
     public List<Message> getMessagesByRoomId(Integer roomId) {
         return messageDAO.findMessagesByRoomId(roomId);
     }

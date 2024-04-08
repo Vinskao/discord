@@ -42,5 +42,10 @@
         SET password = #{password}
         WHERE username = #{username}
     </update>
+    <update id="updateUserDetailsByUsername" parameterType="map">
+        UPDATE users
+        SET birthday = #{birthday}, interests = #{interests}
+        WHERE username = #{username}
+    </update>
 
 </mapper>

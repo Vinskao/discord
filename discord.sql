@@ -1,11 +1,12 @@
 drop table security_questions
-drop table users
 drop table messages
 drop table user_to_group
 drop table user_to_room
 drop table room
 drop table [group]
+drop table users
 
+select * from security_questions
 select * from messages
 select * from users
 select * from user_to_group
@@ -15,6 +16,7 @@ select * from [group]
 
 DELETE FROM user_to_room;
 DELETE FROM user_to_group;
+DELETE FROM security_questions;
 
 CREATE TABLE users (
     id INT IDENTITY(1,1),
@@ -39,7 +41,7 @@ CREATE TABLE room (
 );
 
 CREATE TABLE user_to_group (
-    username NVARCHAR(50),
+    username NVARCHAR(50) UNIQUE,
     group_id INT,
     PRIMARY KEY (username, group_id),
     FOREIGN KEY (username) REFERENCES users(username),
@@ -47,7 +49,7 @@ CREATE TABLE user_to_group (
 );
 
 CREATE TABLE user_to_room (
-    username NVARCHAR(50),
+    username NVARCHAR(50) UNIQUE,
     room_id INT,
     PRIMARY KEY (username, room_id),
     FOREIGN KEY (username) REFERENCES users(username),

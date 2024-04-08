@@ -18,8 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +28,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mli.discord.module.login.dao.UserRepository;
 import com.mli.discord.module.login.dto.LoginDTO;
 import com.mli.discord.module.login.dto.RegisterDTO;
+import com.mli.discord.module.login.dto.UpdateUserDetailsDTO;
 import com.mli.discord.module.login.dto.UserIdDTO;
 import com.mli.discord.module.login.dto.UsernameDTO;
 import com.mli.discord.module.login.model.User;
 import com.mli.discord.module.login.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * 使用者控制器類，處理使用者相關的 HTTP 請求。
+ * 處理用戶相關 HTTP 請求的控制器，包括登入、登出、註冊等功能。
  * 
  * @version 1.0
  * @author D3031104
@@ -45,6 +46,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @CrossOrigin
 @RestController
 @RequestMapping("/user")
+@Tag(name = "UserController", description = "用戶功能控制器")
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,7 +58,15 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    /**
+     * 處理用戶登入請求。認證成功則建立會話並返回成功響應，認證失敗則返回錯誤訊息。
+     *
+     * @param loginDTO 包含用戶名和密碼的登入資訊
+     * @param request  HttpServletRequest 對象，用於創建會話
+     * @return 登入成功或失敗的 ResponseEntity
+     */
     @PostMapping("/login")
+    @Operation(summary = "用戶登入")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -79,8 +89,8 @@ public class UserController {
      * @param request HTTP 請求物件
      * @return ResponseEntity 包含登出成功訊息的回應實體
      */
-    @Operation(summary = "使用者登出")
     @PostMapping("/logout")
+    @Operation(summary = "使用者登出")
     @ResponseBody
     public ResponseEntity<String> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -130,6 +140,7 @@ public class UserController {
      * @return ResponseEntity 包含註冊成功或失敗訊息的回應實體
      */
     @PostMapping("/register")
+    @Operation(summary = "註冊使用者")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO) {
         int result = userRepository.createUser(registerDTO.getUsername(), registerDTO.getPassword(),
                 registerDTO.getBirthday(), registerDTO.getInterests());
@@ -148,6 +159,7 @@ public class UserController {
      * @return ResponseEntity 包含密碼更新成功或失敗訊息的回應實體
      */
     @PostMapping("/update-password")
+    @Operation(summary = "更新使用者密碼")
     public ResponseEntity<?> updatePassword(@RequestBody LoginDTO loginDTO) {
         boolean updated = userService.updatePassword(loginDTO.getUsername(), loginDTO.getPassword());
         if (updated) {
@@ -157,7 +169,14 @@ public class UserController {
         }
     }
 
+    /**
+     * 驗證session中有沒有使用者
+     * 
+     * @param request
+     * @return ResponseEntity userInfo
+     */
     @PostMapping("/me")
+    @Operation(summary = "驗證session中有沒有使用者")
     public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -189,4 +208,29 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    /**
+     * 更新用戶資料
+     *
+     * @param userDetails
+     * @return 更新成功的訊息或not found
+     */
+    @Operation(summary = "Update user details")
+    @PostMapping("/update-user-details")
+    public ResponseEntity<?> updateUserDetails(@RequestBody UpdateUserDetailsDTO userDetails) {
+        try {
+            boolean success = userService.updateUserDetails(userDetails.getUsername(), userDetails.getBirthday(),
+                    userDetails.getInterests());
+
+            if (success) {
+                return ResponseEntity.ok("User details updated successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or update failed.");
+            }
+        } catch (Exception e) {
+            // 记录异常信息（例如，使用日志）
+            return ResponseEntity.badRequest().body("Error updating user details: " + e.getMessage());
+        }
+    }
+
 }
