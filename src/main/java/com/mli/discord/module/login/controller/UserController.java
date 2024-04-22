@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -94,14 +96,32 @@ public class UserController {
     // @PostMapping("/logout")
     // @Operation(summary = "使用者登出")
     // @ResponseBody
-    // public ResponseEntity<String> logout(HttpServletRequest request) {
+    // public ResponseEntity<String> logout(HttpServletRequest request,
+    // HttpServletResponse response) {
     // HttpSession session = request.getSession(false);
     // if (session != null) {
     // sessionRegistry.removeSessionInformation(session.getId());
     // session.invalidate();
     // SecurityContextHolder.clearContext();
     // }
+    // deleteCookie(request, response, "JSESSIONID");
+
     // return new ResponseEntity<>("登出成功", HttpStatus.OK);
+    // }
+
+    // private void deleteCookie(HttpServletRequest request, HttpServletResponse
+    // response, String cookieName) {
+    // Cookie[] cookies = request.getCookies();
+    // if (cookies != null) {
+    // for (Cookie cookie : cookies) {
+    // if (cookie.getName().equals(cookieName)) {
+    // cookie.setValue("");
+    // cookie.setPath("/");
+    // cookie.setMaxAge(0);
+    // response.addCookie(cookie);
+    // }
+    // }
+    // }
     // }
 
     /**

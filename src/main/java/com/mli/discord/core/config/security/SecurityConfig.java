@@ -104,13 +104,9 @@ public class SecurityConfig {
                             SecurityContextHolder.clearContext();
                         })
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)) // Customize
-                                                                                                          // the
-                                                                                                          // response on
-                                                                                                          // successful
-                                                                                                          // logout
-                        .deleteCookies("JSESSIONID") // Ensure any session cookie is deleted
-                        .clearAuthentication(true) // Clear the authentication attribute
-                )
+
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true))
                 .cors()
                 .and()
 
