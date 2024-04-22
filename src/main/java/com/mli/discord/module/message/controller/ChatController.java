@@ -85,24 +85,6 @@ public class ChatController {
 
 		template.convertAndSend("/topic/message/" + messageDTO.getRoomId(), messageDTO);
 
-		// if (messageDTO.getType() == Message.ChatType.JOIN || messageDTO.getType() ==
-		// Message.ChatType.LEAVE) {
-		// // 这里你需要有另外的逻辑来处理用户列表的更新，因为我们已经移除了 UserSessionRegistry
-		// // 可以是从数据库获取，缓存，或者其他服务等
-		//
-		// // 一旦你有了新的用户列表
-		// List<String> usernames = null;
-		//
-		// // 创建并发送用户列表更新消息
-		// MessageDTO userListMessage = new MessageDTO();
-		// userListMessage.setType(Message.ChatType.USER_LIST);
-		// userListMessage.setMessage(String.join(",", usernames));
-		// userListMessage.setRoomId(messageDTO.getRoomId());
-		//
-		// template.convertAndSend("/topic/message/" + messageDTO.getRoomId(),
-		// userListMessage);
-		// logger.info("UserListMessage broadcasted: {}", userListMessage);
-		// }
 		logger.info("(sendMessage) Broadcasted STOMP message to /topic/message/{}", messageDTO.getRoomId());
 	}
 

@@ -6,6 +6,9 @@ drop table room
 drop table [group]
 drop table users
 
+create DATABASE discord;
+use discord;
+
 select * from security_questions
 select * from messages
 select * from users
@@ -19,7 +22,9 @@ DELETE FROM user_to_room;
 DELETE FROM user_to_group;
 DELETE FROM security_questions;
 
-
+drop DATABASE discord;
+create DATABASE discord;
+use discord;
 CREATE TABLE users (
     id INT IDENTITY(1,1),
     username NVARCHAR(50) PRIMARY KEY NOT NULL,
@@ -37,7 +42,7 @@ CREATE TABLE [group] (
 CREATE TABLE room (
     id INT PRIMARY KEY IDENTITY(1,1),
     name NVARCHAR(255) NOT NULL,
-    group_id INT,
+    group_id INT NOT NULL,
     visibility INT NOT NULL,
     FOREIGN KEY (group_id) REFERENCES [group](id)
 );
@@ -70,9 +75,9 @@ CREATE TABLE messages (
 );
 CREATE TABLE security_questions (
     id INT PRIMARY KEY IDENTITY(1,1),
-    username NVARCHAR(50) UNIQUE,
-    question NVARCHAR(MAX),
-    answer NVARCHAR(MAX),
+    username NVARCHAR(50) UNIQUE NOT NULL,
+    question NVARCHAR(MAX) NOT NULL,
+    answer NVARCHAR(MAX) NOT NULL,
     FOREIGN KEY (username) REFERENCES users(username)
 );
 
@@ -89,6 +94,8 @@ INSERT INTO room (name, group_id, visibility) VALUES ('Room c', 2, 1);
 INSERT INTO room (name, group_id, visibility) VALUES ('Room 9', 3, 1);
 INSERT INTO room (name, group_id, visibility) VALUES ('Room 99', 3, 1);
 INSERT INTO room (name, group_id, visibility) VALUES ('Room 999', 3, 1);
+
+
 INSERT INTO user_to_group (username, group_id) VALUES
 ('chiaki@mli.com', 1),
 ('min@mli.com', 1),

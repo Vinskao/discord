@@ -17,8 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +52,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private SessionRegistry sessionRegistry;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -76,6 +77,7 @@ public class UserController {
             User user = (User) userService.loadUserByUsername(loginDTO.getUsername());
             HttpSession session = request.getSession(true);
             session.setAttribute("username", user.getUsername());
+            session.setAttribute("authority", user.getAuthority().toString());
 
             return ResponseEntity.ok().body("Login Successful");
         } catch (AuthenticationException e) {
@@ -83,22 +85,24 @@ public class UserController {
         }
     }
 
-    /**
-     * 使用者登出
-     * 
-     * @param request HTTP 請求物件
-     * @return ResponseEntity 包含登出成功訊息的回應實體
-     */
-    @PostMapping("/logout")
-    @Operation(summary = "使用者登出")
-    @ResponseBody
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return new ResponseEntity<>("登出成功", HttpStatus.OK);
-    }
+    // /**
+    // * 使用者登出
+    // *
+    // * @param request HTTP 請求物件
+    // * @return ResponseEntity 包含登出成功訊息的回應實體
+    // */
+    // @PostMapping("/logout")
+    // @Operation(summary = "使用者登出")
+    // @ResponseBody
+    // public ResponseEntity<String> logout(HttpServletRequest request) {
+    // HttpSession session = request.getSession(false);
+    // if (session != null) {
+    // sessionRegistry.removeSessionInformation(session.getId());
+    // session.invalidate();
+    // SecurityContextHolder.clearContext();
+    // }
+    // return new ResponseEntity<>("登出成功", HttpStatus.OK);
+    // }
 
     /**
      * 檢查使用者登入狀態
@@ -228,7 +232,6 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or update failed.");
             }
         } catch (Exception e) {
-            // 记录异常信息（例如，使用日志）
             return ResponseEntity.badRequest().body("Error updating user details: " + e.getMessage());
         }
     }
